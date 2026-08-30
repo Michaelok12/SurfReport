@@ -52,6 +52,43 @@ public final class ForecastRepository {
         public double maxWind = 11;
     }
 
+    public static final class WindowSummary {
+        public long windowStart;
+        public long windowEnd;
+        public int score;
+        public String rating;
+        public String facesText;
+        public String swellText;
+        public String windText;
+        public String tideText;
+
+        JSONObject toJson() throws JSONException {
+            JSONObject j = new JSONObject();
+            j.put("windowStart", windowStart);
+            j.put("windowEnd", windowEnd);
+            j.put("score", score);
+            j.put("rating", rating);
+            j.put("facesText", facesText);
+            j.put("swellText", swellText);
+            j.put("windText", windText);
+            j.put("tideText", tideText);
+            return j;
+        }
+
+        static WindowSummary fromJson(JSONObject j) {
+            WindowSummary w = new WindowSummary();
+            w.windowStart = j.optLong("windowStart", 0);
+            w.windowEnd = j.optLong("windowEnd", 0);
+            w.score = j.optInt("score", 0);
+            w.rating = j.optString("rating", "—");
+            w.facesText = j.optString("facesText", "—");
+            w.swellText = j.optString("swellText", "—");
+            w.windText = j.optString("windText", "—");
+            w.tideText = j.optString("tideText", "—");
+            return w;
+        }
+    }
+
     public static final class ForecastSnapshot {
         public long updatedAt;
         public long windowStart;
@@ -67,6 +104,7 @@ public final class ForecastRepository {
         public String windText;
         public String tideText;
         public String sourceText;
+        public List<WindowSummary> nextWindows = new ArrayList<>();
 
         JSONObject toJson() throws JSONException {
             JSONObject j = new JSONObject();
@@ -84,6 +122,9 @@ public final class ForecastRepository {
             j.put("windText", windText);
             j.put("tideText", tideText);
             j.put("sourceText", sourceText);
+            JSONArray next = new JSONArray();
+            for (WindowSummary w : nextWindows) next.put(w.toJson());
+            j.put("nextWindows", next);
             return j;
         }
 
@@ -103,6 +144,13 @@ public final class ForecastRepository {
             s.windText = j.optString("windText", "—");
             s.tideText = j.optString("tideText", "—");
             s.sourceText = j.optString("sourceText", "Open-Meteo + NOAA");
+            JSONArray next = j.optJSONArray("nextWindows");
+            if (next != null) {
+                for (int i = 0; i < next.length(); i++) {
+                    JSONObject item = next.optJSONObject(i);
+                    if (item != null) s.nextWindows.add(WindowSummary.fromJson(item));
+                }
+            }
             return s;
         }
     }
@@ -230,6 +278,50 @@ public final class ForecastRepository {
         s.windText = best.windSpeed == null ? "—" : String.format(Locale.US, "%s %.0f mph", compass(best.windDir), best.windSpeed);
         s.tideText = best.tideLabel == null ? "—" : best.tideLabel;
         s.sourceText = result.usedNoaa ? "Open-Meteo · NOAA tides" : "Open-Meteo · tide fallback";
+        for (Window next : selectDistinctWindows(windows, best, 3)) {
+            s.nextWindows.add(summaryFromWindow(next));
+        }
+        return s;
+    }
+
+    private static List<Window> selectDistinctWindows(List<Window> ranked, Window best, int count) {
+        List<Window> selected = new ArrayList<>();
+        for (Window candidate : ranked) {
+            if (candidate == best) continue;
+            if (overlaps(candidate, best)) continue;
+            boolean conflict = false;
+            for (Window chosen : selected) {
+                if (overlaps(candidate, chosen)) { conflict = true; break; }
+            }
+            if (conflict) continue;
+            selected.add(candidate);
+            if (selected.size() >= count) break;
+        }
+        // If overlap filtering leaves too few, backfill from the ranking.
+        if (selected.size() < count) {
+            for (Window candidate : ranked) {
+                if (candidate == best || selected.contains(candidate)) continue;
+                selected.add(candidate);
+                if (selected.size() >= count) break;
+            }
+        }
+        return selected;
+    }
+
+    private static boolean overlaps(Window a, Window b) {
+        return a.start.isBefore(b.end) && b.start.isBefore(a.end);
+    }
+
+    private static WindowSummary summaryFromWindow(Window w) {
+        WindowSummary s = new WindowSummary();
+        s.windowStart = w.start.atZone(ZONE).toInstant().toEpochMilli();
+        s.windowEnd = w.end.atZone(ZONE).toInstant().toEpochMilli();
+        s.score = w.score;
+        s.rating = scoreLabel(w.score);
+        s.facesText = w.breaking == null ? "—" : String.format(Locale.US, "%.1f–%.1f ft · %s", w.breaking.low, w.breaking.high, w.breaking.band);
+        s.swellText = w.swellHeight == null || w.period == null ? "—" : String.format(Locale.US, "%.1f' @ %.0fs %s", w.swellHeight, w.period, compass(w.swellDir));
+        s.windText = w.windSpeed == null ? "—" : String.format(Locale.US, "%s %.0f mph", compass(w.windDir), w.windSpeed);
+        s.tideText = w.tideLabel == null ? "—" : w.tideLabel;
         return s;
     }
 
