@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_bg">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/board_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="1" android:ellipsize="end" android:textStyle="bold" android:textSize="13sp" android:textColor="@color/widget_muted" android:text="6'6 Progression · 40 L" />
+        <TextView android:id="@+id/score" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" android:textSize="25sp" android:textColor="@color/widget_accent" android:text="—" />
+        <ImageButton android:id="@+id/refresh_button" android:layout_width="36dp" android:layout_height="36dp" android:layout_marginStart="6dp" android:background="@android:color/transparent" android:contentDescription="Refresh forecast" android:src="@drawable/ic_refresh" />
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/rating" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" android:textSize="13sp" android:textColor="@color/widget_text" android:text="Loading forecast…" />
+        <TextView android:id="@+id/window" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="8dp" android:maxLines="1" android:ellipsize="end" android:textSize="12sp" android:textColor="@color/widget_text" android:text="—" />
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:orientation="horizontal">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:text="FACES" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
+            <TextView android:id="@+id/faces" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:textSize="12sp" android:textColor="@color/widget_text" android:text="—" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:text="SWELL" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
+            <TextView android:id="@+id/swell" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:textSize="12sp" android:textColor="@color/widget_text" android:text="—" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:text="WIND" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
+            <TextView android:id="@+id/wind" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:textSize="12sp" android:textColor="@color/widget_text" android:text="—" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:text="TIDE" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
+            <TextView android:id="@+id/tide" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:textSize="12sp" android:textColor="@color/widget_text" android:text="—" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView android:id="@+id/updated" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:maxLines="1" android:ellipsize="end" android:textSize="9sp" android:textColor="@color/widget_muted" android:text="Not updated yet" />
+</LinearLayout>

@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b1620" />
+  <meta name="application-name" content="Rockaway Board Window" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon-192.png" sizes="192x192" type="image/png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <title>Rockaway Board Window</title>
+  <style>
+    :root{
+      --bg:#071019; --panel:#0d1a25; --panel2:#102230; --line:#203543;
+      --text:#eef7fb; --muted:#8fa9b8; --good:#4ad38a; --ok:#9edc68;
+      --warn:#f2c15c; --bad:#ef756f; --accent:#65c6e8; --accent2:#86e0cb;
+      --shadow:0 18px 50px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at 20% -10%,#12374b 0,transparent 34%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}
+    button,input,select{font:inherit}
+    a{color:inherit}
+    .app{max-width:1180px;margin:0 auto;padding:24px 18px 60px}
+    header{display:flex;gap:18px;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+    .eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);font-weight:750}
+    h1{font-size:clamp(28px,5vw,48px);line-height:1.04;margin:6px 0 6px;letter-spacing:-.04em}
+    .sub{color:var(--muted);max-width:700px;margin:0}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .btn{border:1px solid var(--line);background:#10202c;color:var(--text);padding:10px 13px;border-radius:12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px}
+    .btn:hover{border-color:#3c657c;background:#132b3a}
+    .btn:disabled{opacity:.45;cursor:not-allowed}.btn:disabled:hover{border-color:var(--line);background:#10202c}
+    .btn.primary{background:linear-gradient(135deg,#12678b,#17785e);border-color:transparent}
+    .statusline{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 18px}
+    .chip{padding:7px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:rgba(16,34,48,.72);font-size:13px}
+    .chip strong{color:var(--text)}
+    .chip-select{appearance:none;background:transparent;color:var(--text);border:0;padding:0 20px 0 4px;font-weight:700;cursor:pointer;max-width:250px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 9px) 52%,calc(100% - 5px) 52%;background-size:4px 4px,4px 4px;background-repeat:no-repeat}
+    .chip-select:focus{outline:2px solid var(--accent);outline-offset:3px;border-radius:5px}
+    .grid{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}
+    .panel{background:linear-gradient(180deg,rgba(15,32,44,.97),rgba(9,22,31,.97));border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+    .panel-pad{padding:18px}
+    .panel-title{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}
+    .panel-title h2{font-size:16px;margin:0;letter-spacing:-.01em}
+    .panel-title span{font-size:12px;color:var(--muted)}
+    .hero{padding:22px;min-height:240px;display:flex;flex-direction:column;justify-content:space-between}
+    .score-row{display:flex;gap:18px;align-items:center}
+    .score{width:112px;height:112px;border-radius:50%;display:grid;place-items:center;border:8px solid var(--line);position:relative;background:#0b1821;flex:0 0 auto}
+    .score::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:8px solid transparent;border-top-color:var(--scoreColor,var(--accent));transform:rotate(38deg)}
+    .score strong{font-size:37px;letter-spacing:-.05em}
+    .score small{display:block;color:var(--muted);font-size:10px;text-align:center;margin-top:-6px;text-transform:uppercase;letter-spacing:.1em}
+    .hero h2{font-size:30px;margin:0 0 4px;letter-spacing:-.03em}
+    .hero .why{color:var(--muted);margin:0;max-width:620px}
+    .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:9px;margin-top:18px}
+    .metric{border:1px solid var(--line);border-radius:14px;padding:11px;background:#0b1821}
+    .metric small{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}
+    .metric strong{font-size:15px}
+    .best-list{display:flex;flex-direction:column;gap:9px}
+    .best-item{display:grid;grid-template-columns:55px 1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:14px;background:#0b1821}
+    .rank{font-size:12px;color:var(--muted)}
+    .best-item strong{display:block}
+    .best-item .meta{color:var(--muted);font-size:12px;margin-top:2px}
+    .pill{padding:6px 9px;border-radius:999px;font-weight:750;font-size:12px;border:1px solid currentColor;white-space:nowrap}
+    .days{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+    .day{padding:15px;border:1px solid var(--line);border-radius:17px;background:#0b1821}
+    .day-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:12px}
+    .day-head strong{font-size:16px}.day-head span{font-size:12px;color:var(--muted)}
+    .window{padding:10px 0;border-top:1px solid rgba(32,53,67,.75);display:grid;grid-template-columns:1fr auto;gap:8px}
+    .window:first-of-type{border-top:0;padding-top:0}
+    .window-time{font-weight:700;font-size:14px}.window-detail{color:var(--muted);font-size:12px;margin-top:2px}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:12px}
+    .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+    .footer-note{color:var(--muted);font-size:12px;margin-top:18px}
+    .buoy-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px}
+    .buoy-main{border:1px solid var(--line);border-radius:17px;background:#0b1821;padding:16px}
+    .buoy-main-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .buoy-main h3{margin:2px 0 2px;font-size:24px;letter-spacing:-.03em}
+    .buoy-main p{margin:0;color:var(--muted);font-size:12px}
+    .buoy-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:14px}
+    .buoy-compare{display:flex;flex-direction:column;gap:9px}
+    .compare-row{border:1px solid var(--line);border-radius:14px;background:#0b1821;padding:12px}
+    .compare-row small{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
+    .compare-row strong{display:block;font-size:14px}
+    .compare-row span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+    .fresh{color:var(--good)}.stale{color:var(--warn)}.offline{color:var(--bad)}
+    .error{padding:16px;border-radius:14px;background:rgba(239,117,111,.12);border:1px solid rgba(239,117,111,.45);color:#ffd7d4;margin-bottom:14px;display:none}
+    .loading{height:6px;background:#142733;overflow:hidden;border-radius:999px;margin-bottom:15px;display:none}.loading::after{content:"";display:block;width:36%;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));animation:load 1.1s infinite ease-in-out}@keyframes load{0%{transform:translateX(-110%)}100%{transform:translateX(390%)}}
+    dialog{width:min(560px,calc(100vw - 24px));border:1px solid var(--line);border-radius:20px;padding:0;background:#0c1923;color:var(--text);box-shadow:var(--shadow)}
+    dialog::backdrop{background:rgba(0,0,0,.72)}
+    .dlg{padding:20px}.dlg h2{margin:0 0 6px}.dlg p{color:var(--muted);margin:0 0 16px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:12px;color:var(--muted)}
+    .field input,.field select{background:#08141d;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;min-height:44px;font-size:16px}
+    .dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+    .tiny{font-size:11px;color:var(--muted);margin-top:8px}
+    .board-summary{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 2px}.board-tag{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:#08141d;font-size:12px;color:var(--muted)}.board-tag strong{color:var(--text)}
+    .danger{border-color:rgba(239,117,111,.5);color:#ffd7d4}.danger:hover{background:rgba(239,117,111,.12);border-color:var(--bad)}
+    .session-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+    .session-stat{border:1px solid var(--line);border-radius:14px;padding:11px;background:#0b1821;min-width:0}
+    .session-stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}.session-stat strong{font-size:15px;display:block;overflow-wrap:anywhere}
+    .session-list{display:flex;flex-direction:column;gap:10px}.session-card{border:1px solid var(--line);border-radius:16px;padding:14px;background:#0b1821}
+    .session-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.session-head h3{margin:0;font-size:16px}.session-head .meta{font-size:12px;color:var(--muted);margin-top:2px}
+    .session-score{font-weight:800;font-size:15px;white-space:nowrap}.session-ratings{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.rating-chip{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 8px}.rating-chip strong{color:var(--text)}
+    .session-conditions{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.55}.session-notes{font-size:13px;margin:9px 0 0;white-space:pre-wrap}.session-actions{display:flex;gap:7px;justify-content:flex-end;margin-top:10px}.session-actions .btn{padding:7px 10px;font-size:12px}
+    .empty-state{border:1px dashed var(--line);border-radius:15px;padding:18px;color:var(--muted);text-align:center;background:#0b1821}
+    .rating-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.rating-help{font-size:10px;color:var(--muted);margin-top:2px}
+    @media(max-width:850px){.grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.days{grid-template-columns:1fr}.buoy-grid{grid-template-columns:1fr}.buoy-metrics{grid-template-columns:repeat(2,1fr)}.session-summary{grid-template-columns:repeat(2,1fr)}header{flex-direction:column}.toolbar{justify-content:flex-start}.hero{min-height:auto}}
+    @media(max-width:520px){.app{padding:18px 12px 40px}.score-row{align-items:flex-start}.score{width:92px;height:92px}.score strong{font-size:31px}.hero h2{font-size:24px}.metrics{grid-template-columns:1fr 1fr}.metric:last-child{grid-column:1/-1}.session-summary{grid-template-columns:1fr 1fr}.rating-grid{grid-template-columns:1fr}.session-head{flex-direction:column}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <div class="eyebrow">Personal surf-window prototype</div>
+      <h1>Rockaway Board Window</h1>
+      <p class="sub">A forecast tuned to one question: <strong>when is Rockaway a good place to test and progress on a 6'6 / ~40 L board?</strong></p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="boardsBtn">▤ Boards</button>
+      <button class="btn" id="logSessionBtn">＋ Log session</button>
+      <button class="btn" id="settingsBtn">⚙ Scoring</button>
+      <button class="btn" id="refreshBtn">↻ Refresh</button>
+      <button class="btn primary" id="installBtn" type="button" hidden>⇩ Install app</button>
+      <a class="btn primary" href="https://www.surfline.com/surf-report/beach-90th/5842041f4e65fad6a7708852" target="_blank" rel="noopener">Open Surfline ↗</a>
+    </div>
+  </header>
+
+  <div class="statusline">
+    <div class="chip"><strong>Spot:</strong> Beach 90th / Rockaway</div>
+    <div class="chip"><strong>Surfer:</strong> 170 lb · intermediate</div>
+    <div class="chip"><strong>Board:</strong> <select id="boardSelect" class="chip-select" aria-label="Active board"></select></div>
+    <div class="chip"><strong>Mode:</strong> <span id="modeChip">First demo</span></div>
+    <div class="chip" id="tideSourceChip"><strong>Tides:</strong> NOAA Sandy Hook</div>
+    <div class="chip" id="buoySourceChip"><strong>Buoy:</strong> 44065 loading…</div>
+    <div class="chip" id="connectivityChip"><strong>Network:</strong> checking…</div>
+    <div class="chip" id="updatedChip">Forecast not loaded</div>
+  </div>
+
+  <div class="loading" id="loading"></div>
+  <div class="error" id="error"></div>
+
+  <section class="grid">
+    <div class="panel hero" id="hero">
+      <div class="score-row">
+        <div class="score" id="heroScore"><div><strong>—</strong><small>score</small></div></div>
+        <div>
+          <div class="eyebrow" id="heroWhen">Next window</div>
+          <h2 id="heroLabel">Loading forecast…</h2>
+          <p class="why" id="heroWhy">Fetching marine and wind data from Open-Meteo.</p>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><small>Primary swell</small><strong id="mSwell">—</strong></div>
+        <div class="metric"><small>Relative energy</small><strong id="mEnergy">—</strong></div>
+        <div class="metric"><small>Wind</small><strong id="mWind">—</strong></div>
+        <div class="metric"><small>Tide phase</small><strong id="mTide">—</strong></div>
+        <div class="metric"><small>Est. breaking face</small><strong id="mBreak">—</strong></div>
+        <div class="metric"><small>Total wave</small><strong id="mWave">—</strong></div>
+        <div class="metric"><small>Quiver pick</small><strong id="mBoardPick">—</strong></div>
+      </div>
+    </div>
+
+    <aside class="panel panel-pad">
+      <div class="panel-title"><h2>Next best windows</h2><span>3-hour averages</span></div>
+      <div class="best-list" id="bestList"><div class="best-item"><div class="rank">—</div><div><strong>Loading…</strong><div class="meta">Forecast data</div></div><span class="pill">—</span></div></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--good)"></i>85+ excellent</span>
+        <span><i class="dot" style="background:var(--ok)"></i>75–84 good</span>
+        <span><i class="dot" style="background:var(--warn)"></i>60–74 marginal</span>
+        <span><i class="dot" style="background:var(--bad)"></i>&lt;60 poor</span>
+      </div>
+    </aside>
+  </section>
+
+  <section class="panel panel-pad" style="margin-top:16px" id="buoyPanel">
+    <div class="panel-title"><h2>Buoy 44065 · offshore reality check</h2><span>15 NM SE of Breezy Point</span></div>
+    <div class="buoy-grid">
+      <div class="buoy-main">
+        <div class="buoy-main-head">
+          <div>
+            <div class="eyebrow">Observed now</div>
+            <h3 id="buoyHeadline">Loading buoy…</h3>
+            <p id="buoyTime">NOAA/NDBC observation via IOOS ERDDAP</p>
+          </div>
+          <span class="pill" id="buoyFreshness">—</span>
+        </div>
+        <div class="buoy-metrics">
+          <div class="metric"><small>Primary swell</small><strong id="bSwell">—</strong></div>
+          <div class="metric"><small>Wind sea</small><strong id="bWindWave">—</strong></div>
+          <div class="metric"><small>Buoy wind</small><strong id="bWind">—</strong></div>
+          <div class="metric"><small>Swell energy</small><strong id="bEnergy">—</strong></div>
+        </div>
+      </div>
+      <div class="buoy-compare">
+        <div class="compare-row"><small>Model vs buoy · total sea</small><strong id="bModelWave">Waiting for both feeds…</strong><span id="bModelWaveNote">Compares Open-Meteo total wave height to the nearest buoy observation.</span></div>
+        <div class="compare-row"><small>Model vs buoy · primary swell</small><strong id="bModelSwell">Waiting for both feeds…</strong><span id="bModelSwellNote">Useful as a reality check; model and buoy partition algorithms are not identical.</span></div>
+        <div class="compare-row"><small>Buoy-implied breaking faces</small><strong id="bBreakEstimate">Waiting for buoy…</strong><span id="bBreakEstimateNote">Heuristic estimate of likely face height at Rockaway; actual sandbar peaks can differ substantially.</span></div>
+        <div class="compare-row"><small>How to use this</small><strong id="bInterpretation">Forecast scores remain forecast-only.</strong><span>Buoy observations verify what is actually arriving offshore now; they do not predict later windows.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-title"><h2>Day-by-day</h2><span id="sourceLabel">Open-Meteo marine + weather · NOAA tides</span></div>
+    <div class="days" id="days"></div>
+    <p class="footer-note">Marine and wind forecast data: <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener">Open-Meteo</a>. Live buoy observations: NOAA/NDBC station <a href="https://www.ndbc.noaa.gov/station_page.php?station=44065" target="_blank" rel="noopener">44065</a> via an <a href="https://erddap.sensors.axds.co/erddap/info/gov-ndbc-44065/index.html" target="_blank" rel="noopener">IOOS ERDDAP mirror</a> so the browser can access the feed without a custom server. Tide predictions: <a href="https://tidesandcurrents.noaa.gov/noaatidepredictions.html?id=8531680" target="_blank" rel="noopener">NOAA CO-OPS Sandy Hook, NJ station 8531680</a>, hourly predictions in local time, feet relative to MLLW. If NOAA is unavailable, the app automatically falls back to Open-Meteo modeled sea level. The breaking-face estimate is a Rockaway-specific heuristic: it converts directional wave-energy input (roughly H²×T) into an estimated face-height range and is intentionally shown as a range rather than a precise prediction. It is not a bathymetric wave-transformation model. The score is a board-selection heuristic, not a surf-safety rating; Rockaway's sandbars, currents and breaking size can differ materially from offshore model output.</p>
+  </section>
+
+  <section class="panel panel-pad" style="margin-top:16px" id="sessionsPanel">
+    <div class="panel-title"><h2>Session log</h2><span>Saved locally in this browser</span></div>
+    <div class="session-summary">
+      <div class="session-stat"><small>Total sessions</small><strong id="sTotal">0</strong></div>
+      <div class="session-stat"><small>Active board sessions</small><strong id="sBoardCount">0</strong></div>
+      <div class="session-stat"><small>Average overall</small><strong id="sAvgOverall">—</strong></div>
+      <div class="session-stat"><small>Best-session pattern</small><strong id="sCalibration">Need 3+ sessions</strong></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+      <p class="footer-note" style="margin:0">Log how the board actually felt. When forecast data are available for that hour, the app snapshots the model conditions and predicted board score for later calibration.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" type="button" id="exportSessionsBtn">⇩ Export CSV</button>
+        <button class="btn primary" type="button" id="logSessionInlineBtn">＋ Log session</button>
+      </div>
+    </div>
+    <div class="session-list" id="sessionList"></div>
+  </section>
+</div>
+
+<dialog id="settingsDialog">
+  <form method="dialog" class="dlg" id="settingsForm">
+    <h2>Scoring assumptions</h2>
+    <p>These values define a good session for the <strong id="scoringBoardName">active board</strong>. Each board keeps its own scoring profile.</p>
+    <div class="form-grid">
+      <div class="field full">
+        <label for="mode">Use case</label>
+        <select id="mode">
+          <option value="demo">First demo — conservative upper limit</option>
+          <option value="progression">Regular progression — wider range</option>
+        </select>
+      </div>
+      <div class="field"><label for="energyLow">Sweet-spot energy low</label><input id="energyLow" type="number" min="10" max="150" value="40" /></div>
+      <div class="field"><label for="energyHigh">Sweet-spot energy high</label><input id="energyHigh" type="number" min="20" max="200" value="85" /></div>
+      <div class="field"><label for="periodLow">Ideal period low (s)</label><input id="periodLow" type="number" min="5" max="15" step="0.5" value="8" /></div>
+      <div class="field"><label for="periodHigh">Ideal period high (s)</label><input id="periodHigh" type="number" min="6" max="18" step="0.5" value="11" /></div>
+      <div class="field"><label for="maxWind">Comfortable wind ceiling (mph)</label><input id="maxWind" type="number" min="3" max="25" value="11" /></div>
+      <div class="field"><label for="daysCount">Forecast days</label><select id="daysCount"><option>5</option><option selected>7</option><option>8</option></select></div>
+    </div>
+    <div class="tiny">Relative swell energy = swell height² × period, using feet and seconds. Breaking-face estimates use directional H²×T energy and are displayed as a range; they are not literal nearshore-model output.</div>
+    <div class="dlg-actions"><button class="btn" value="cancel">Cancel</button><button class="btn primary" value="default" id="saveSettings">Save & recalculate</button></div>
+  </form>
+</dialog>
+
+<dialog id="boardsDialog">
+  <form class="dlg" id="boardsForm">
+    <h2>Board quiver</h2>
+    <p>Add the boards you actually ride. Switching the active board instantly re-scores the current forecast using that board’s saved profile.</p>
+    <div class="form-grid">
+      <div class="field full"><label for="manageBoardSelect">Board to edit</label><select id="manageBoardSelect"></select></div>
+      <div class="field full"><label for="boardNameEdit">Board name</label><input id="boardNameEdit" maxlength="40" /></div>
+      <div class="field"><label for="boardLengthEdit">Length</label><input id="boardLengthEdit" placeholder="6'6" maxlength="12" /></div>
+      <div class="field"><label for="boardVolumeEdit">Volume (L)</label><input id="boardVolumeEdit" type="number" min="20" max="90" step="0.5" /></div>
+      <div class="field full"><label for="boardTypeEdit">Type / notes</label><input id="boardTypeEdit" placeholder="Performance hybrid" maxlength="60" /></div>
+    </div>
+    <div class="board-summary" id="boardProfileSummary"></div>
+    <div class="tiny">New boards start with a sensible scoring profile based on volume. Fine-tune that profile under <strong>Scoring</strong>.</div>
+    <div class="dlg-actions" style="justify-content:space-between;flex-wrap:wrap">
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="newBoardBtn">＋ New board</button><button class="btn danger" type="button" id="deleteBoardBtn">Delete</button></div>
+      <div style="display:flex;gap:8px"><button class="btn" type="button" id="closeBoardsBtn">Close</button><button class="btn primary" type="button" id="saveBoardBtn">Save board</button></div>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="sessionDialog">
+  <form class="dlg" id="sessionForm">
+    <h2 id="sessionDialogTitle">Log surf session</h2>
+    <p>Rate the parts that matter for board progression. Conditions are attached automatically from the nearest loaded forecast hour when available.</p>
+    <div class="form-grid">
+      <div class="field"><label for="sessionDate">Date</label><input id="sessionDate" type="date" required /></div>
+      <div class="field"><label for="sessionTime">Approx. session midpoint</label><input id="sessionTime" type="time" required /></div>
+      <div class="field full"><label for="sessionBoard">Board</label><select id="sessionBoard"></select></div>
+      <div class="field"><label for="sessionMinutes">Session length (min)</label><input id="sessionMinutes" type="number" min="10" max="480" step="5" value="90" /></div>
+      <div class="field"><label for="sessionWaves">Waves caught (optional)</label><input id="sessionWaves" type="number" min="0" max="100" step="1" /></div>
+    </div>
+    <div class="rating-grid" style="margin-top:14px">
+      <div class="field"><label for="rOverall">Overall session</label><select id="rOverall"><option value="1">1 · Bad</option><option value="2">2 · Poor</option><option value="3" selected>3 · Okay</option><option value="4">4 · Good</option><option value="5">5 · Excellent</option></select></div>
+      <div class="field"><label for="rWaveQuality">Wave quality</label><select id="rWaveQuality"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+      <div class="field"><label for="rCatch">Wave catching</label><select id="rCatch"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select><div class="rating-help">1 = struggled to enter waves · 5 = easy/reliable</div></div>
+      <div class="field"><label for="rStability">Board stability</label><select id="rStability"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select><div class="rating-help">1 = very tippy · 5 = completely comfortable</div></div>
+      <div class="field"><label for="rPaddle">Paddle-out</label><select id="rPaddle"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select><div class="rating-help">1 = exhausting/blocked · 5 = easy to get outside</div></div>
+      <div class="field"><label for="rDuck">Duck diving</label><select id="rDuck"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select><div class="rating-help">1 = couldn't sink board · 5 = deep/repeatable</div></div>
+      <div class="field"><label for="rTurns">Turns / control</label><select id="rTurns"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select><div class="rating-help">1 = board fought me · 5 = responsive/predictable</div></div>
+    </div>
+    <div class="field full" style="margin-top:12px"><label for="sessionNotes">Notes</label><textarea id="sessionNotes" rows="4" maxlength="1000" placeholder="e.g. Stable once moving, noticeably easier duck dive, missed a few late takeoffs…" style="background:#08141d;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;resize:vertical"></textarea></div>
+    <div class="tiny" id="sessionConditionHint">Conditions will be matched when you save.</div>
+    <div class="dlg-actions" style="justify-content:space-between;flex-wrap:wrap">
+      <button class="btn danger" type="button" id="deleteSessionBtn" style="visibility:hidden">Delete session</button>
+      <div style="display:flex;gap:8px"><button class="btn" type="button" id="cancelSessionBtn">Cancel</button><button class="btn primary" type="submit">Save session</button></div>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(() => {
+  const SPOT = { lat: 40.586, lon: -73.813, timezone: 'America/New_York' };
+  const DEFAULT_BOARDS = [
+    {id:'torq-vplus-74',name:'Torq V+',boardLength:"7'4",boardVolume:56,boardType:'High-volume midlength',mode:'progression',energyLow:18,energyHigh:70,periodLow:6.5,periodHigh:11,maxWind:12},
+    {id:'progression-66',name:"6'6 Progression",boardLength:"6'6",boardVolume:40,boardType:'Performance hybrid',mode:'demo',energyLow:40,energyHigh:85,periodLow:8,periodHigh:11,maxWind:11}
+  ];
+  const GLOBAL_DEFAULTS = { daysCount:7, activeBoardId:'progression-66' };
+
+  function defaultProfileForVolume(volume=40){
+    const v=Number(volume)||40;
+    if(v>=52) return {mode:'progression',energyLow:18,energyHigh:70,periodLow:6.5,periodHigh:11,maxWind:12};
+    if(v>=44) return {mode:'progression',energyLow:28,energyHigh:90,periodLow:7,periodHigh:12,maxWind:12};
+    if(v>=37) return {mode:'demo',energyLow:40,energyHigh:85,periodLow:8,periodHigh:11,maxWind:11};
+    return {mode:'demo',energyLow:48,energyHigh:100,periodLow:8.5,periodHigh:12,maxWind:10};
+  }
+
+  function loadState(){
+    try{
+      const saved=JSON.parse(localStorage.getItem('rbw_state')||'null');
+      if(saved && Array.isArray(saved.boards) && saved.boards.length){
+        return {daysCount:Number(saved.daysCount)||7,activeBoardId:saved.activeBoardId||saved.boards[0].id,boards:saved.boards,sessions:Array.isArray(saved.sessions)?saved.sessions:[]};
+      }
+    }catch(_){ }
+    const boards=DEFAULT_BOARDS.map(b=>({...b}));
+    try{
+      const legacy=JSON.parse(localStorage.getItem('rbw_settings')||'null');
+      if(legacy){
+        const b=boards.find(x=>x.id==='progression-66');
+        ['mode','boardLength','boardVolume','energyLow','energyHigh','periodLow','periodHigh','maxWind'].forEach(k=>{if(legacy[k]!=null)b[k]=legacy[k]});
+        return {daysCount:Number(legacy.daysCount)||7,activeBoardId:'progression-66',boards,sessions:[]};
+      }
+    }catch(_){ }
+    return {daysCount:7,activeBoardId:'progression-66',boards,sessions:[]};
+  }
+
+  let state=loadState();
+  function activeBoard(){ return state.boards.find(b=>b.id===state.activeBoardId) || state.boards[0]; }
+  const settings=new Proxy({}, {get(_t,k){ return k==='daysCount' ? state.daysCount : activeBoard()?.[k]; }});
+  function syncNativeState(){
+    try{
+      if(window.AndroidBridge && typeof window.AndroidBridge.syncState==='function') window.AndroidBridge.syncState(JSON.stringify({activeBoardId:state.activeBoardId,boards:state.boards}));
+    }catch(_){ }
+  }
+  function saveState(){ localStorage.setItem('rbw_state',JSON.stringify(state)); syncNativeState(); }
+  let rows = [];
+  let solarMap = new Map();
+  let noaaTides = [];
+  let tideSource = 'NOAA Sandy Hook';
+  let buoy = null;
+  let buoySource = 'IOOS ERDDAP / NOAA NDBC 44065';
+  const FORECAST_CACHE_KEY = 'rbw_forecast_cache_v1';
+  let deferredInstallPrompt = null;
+
+  const $ = id => document.getElementById(id);
+  const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
+  const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : null;
+  const degToCompass = d => { if(d==null || Number.isNaN(d)) return '—'; const p=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW']; return p[Math.round((((d%360)+360)%360)/22.5)%16]; };
+  const fmtTime = d => new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit'}).format(d);
+  const fmtDay = d => new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric'}).format(d);
+  const fmtShortDay = d => new Intl.DateTimeFormat('en-US',{weekday:'short'}).format(d);
+  const scoreColor = s => s>=85?'var(--good)':s>=75?'var(--ok)':s>=60?'var(--warn)':'var(--bad)';
+  const scoreLabel = s => s>=85?'Excellent demo window':s>=75?'Good demo window':s>=60?'Marginal / condition-dependent':s>=45?'Poor fit for this board test':'Skip for the first demo';
+
+  function trapezoid(x, low, high, softLow, softHigh){
+    if(x==null || Number.isNaN(x)) return 50;
+    if(x>=low && x<=high) return 100;
+    if(x<low) return clamp(100*(x-softLow)/(low-softLow),0,100);
+    return clamp(100*(softHigh-x)/(softHigh-high),0,100);
+  }
+
+  function directionScore(d){
+    if(d==null) return 55;
+    d=(d+360)%360;
+    // Beach 90th: E/ESE/SE preferred. Full credit 85-140°, useful 65-165°.
+    if(d>=85 && d<=140) return 100;
+    if(d>=65 && d<85) return 70 + (d-65)*1.5;
+    if(d>140 && d<=165) return 100 - (d-140)*1.6;
+    if(d>=45 && d<65) return 40 + (d-45)*1.5;
+    if(d>165 && d<=190) return 60 - (d-165)*1.2;
+    return 30;
+  }
+
+  function windScore(dir, speed, board=activeBoard()){
+    if(speed==null) return 55;
+    if(speed<=3) return 100; // light enough that direction matters little
+    dir=(dir==null?0:(dir+360)%360);
+    // Offshore / best: WNW-NNE (~290 through 30), with N/NW favored.
+    let directional;
+    if(dir>=290 || dir<=30) directional=100;
+    else if((dir>=270&&dir<290)||(dir>30&&dir<=55)) directional=78;
+    else if((dir>=250&&dir<270)||(dir>55&&dir<=80)) directional=55;
+    else directional=25; // generally cross/onshore for this south-facing beach
+    const maxWind=Number(board?.maxWind)||11;
+    const speedFactor = speed<=7 ? 1 : speed<=maxWind ? (1-(speed-7)*0.035) : clamp(0.82-(speed-maxWind)*0.09,0.18,0.82);
+    return clamp(directional*speedFactor,0,100);
+  }
+
+  function stageTide(vals, i, height=null, source='NOAA'){
+    const v = vals[i];
+    if(v==null) return {label:'Unknown',score:60,pct:null,incoming:null,height:null,source};
+    const lo=Math.max(0,i-6), hi=Math.min(vals.length-1,i+6);
+    const local=vals.slice(lo,hi+1).filter(x=>x!=null && Number.isFinite(x));
+    if(!local.length) return {label:'Unknown',score:60,pct:null,incoming:null,height:null,source};
+    const mn=Math.min(...local), mx=Math.max(...local);
+    const pct = mx>mn ? (v-mn)/(mx-mn) : .5;
+    const prev=vals[Math.max(0,i-1)], next=vals[Math.min(vals.length-1,i+1)];
+    const incoming = next!=null && prev!=null ? next>prev : null;
+    let stage = pct<.2?'Low':pct<.62?'Mid':pct<.82?'Mid-high':'High';
+    let score = pct<.15?82:pct<.62?96:pct<.82?74:55;
+    if(incoming===true && pct<.68) score=Math.min(100,score+4);
+    const h = height ?? v;
+    const heightText = Number.isFinite(h) ? ` · ${h.toFixed(1)} ft` : '';
+    return {label:`${stage}${incoming===true?' ↑':incoming===false?' ↓':''}${heightText}`,score,pct,incoming,height:h,source};
+  }
+
+  function modeledTideInfo(i, marine){
+    const vals = marine.hourly.sea_level_height_msl || [];
+    return stageTide(vals,i,null,'Open-Meteo fallback');
+  }
+
+  function noaaTideInfo(timeKey){
+    const i=noaaTides.findIndex(x=>x.key===timeKey);
+    if(i<0) return null;
+    return stageTide(noaaTides.map(x=>x.value),i,noaaTides[i].value,'NOAA Sandy Hook');
+  }
+
+  function noaaDateString(date){
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:SPOT.timezone,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+    const obj=Object.fromEntries(parts.filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
+    return `${obj.year}${obj.month}${obj.day}`;
+  }
+
+  function normalizeNoaaTime(t){ return t.replace(' ','T'); }
+
+
+  function energyScore(e, board=activeBoard()){
+    const upperHard = board.mode==='demo' ? Math.max(board.energyHigh+45,130) : Math.max(board.energyHigh+70,170);
+    return trapezoid(e, board.energyLow, board.energyHigh, 12, upperHard);
+  }
+
+  function totalWaveScore(h, board=activeBoard()){
+    if(h==null) return 60;
+    const highVolume=Number(board.boardVolume)>=50;
+    const hi = board.mode==='demo'?3.8:(highVolume?4.2:5.0);
+    const low = highVolume?0.8:1.4;
+    return trapezoid(h,low,3.0,.4,hi);
+  }
+
+  // Convert offshore spectral energy into a deliberately approximate Rockaway face-height range.
+  // Deep-water wave power scales approximately with H²×T. Directional transmission is a
+  // local exposure heuristic, not a refraction/bathymetry calculation.
+  function directionalTransmission(d){
+    if(d==null || Number.isNaN(d)) return 0.65;
+    const ds=directionScore(d)/100;
+    return clamp(Math.pow(ds,1.35),0.18,1);
+  }
+
+  function breakBand(ft){
+    if(!Number.isFinite(ft)) return 'unknown';
+    if(ft<1.3) return 'knee';
+    if(ft<1.9) return 'thigh';
+    if(ft<2.7) return 'waist';
+    if(ft<3.5) return 'chest';
+    if(ft<4.4) return 'shoulder';
+    if(ft<5.4) return 'head';
+    if(ft<6.5) return 'slightly overhead';
+    if(ft<8.0) return 'overhead';
+    if(ft<10.0) return 'well overhead';
+    return 'double overhead+';
+  }
+
+  function breakingEstimate(input){
+    const totalH=Number.isFinite(input.waveHeight)?input.waveHeight:null;
+    const totalT=Number.isFinite(input.wavePeriod)?input.wavePeriod:null;
+    const totalD=Number.isFinite(input.waveDir)?input.waveDir:null;
+    const h1=Number.isFinite(input.swellHeight)?input.swellHeight:null;
+    const t1=Number.isFinite(input.swellPeriod)?input.swellPeriod:null;
+    const d1=Number.isFinite(input.swellDir)?input.swellDir:null;
+    const h2=Number.isFinite(input.secondaryHeight)?input.secondaryHeight:null;
+    const t2=Number.isFinite(input.secondaryPeriod)?input.secondaryPeriod:null;
+    const d2=Number.isFinite(input.secondaryDir)?input.secondaryDir:null;
+
+    const e1=(h1!=null&&t1!=null)?h1*h1*t1*directionalTransmission(d1):0;
+    const e2=(h2!=null&&t2!=null)?h2*h2*t2*directionalTransmission(d2):0;
+    const eTotal=(totalH!=null&&totalT!=null)?totalH*totalH*totalT*directionalTransmission(totalD):0;
+    const effectiveEnergy=Math.max(e1+e2,eTotal);
+    if(!(effectiveEnergy>0)) return null;
+
+    // 1.5x converts a 10-second energy-equivalent offshore significant height into a
+    // practical face-height estimate. It is calibrated as a heuristic for Rockaway, not physics.
+    const center=1.50*Math.sqrt(effectiveEnergy/10);
+    const primaryShare=(e1+e2)>0?e1/(e1+e2):1;
+    let uncertainty=0.20;
+    if((t1!=null&&t1<7) || directionScore(d1)<60) uncertainty+=0.07;
+    if(primaryShare<0.72) uncertainty+=0.05;
+    if(Number.isFinite(input.windSpeed) && input.windSpeed>14) uncertainty+=0.05;
+    uncertainty=clamp(uncertainty,0.18,0.36);
+    const low=Math.max(0.5,center*(1-uncertainty));
+    const high=center*(1+uncertainty);
+    const lowBand=breakBand(low), highBand=breakBand(high);
+    return {center,low,high,energy:effectiveEnergy,confidence:uncertainty<=0.22?'higher':uncertainty<=0.29?'medium':'lower',band:lowBand===highBand?lowBand:`${lowBand}–${highBand}`};
+  }
+
+  function breakText(b){
+    if(!b) return '—';
+    return `${b.low.toFixed(1)}–${b.high.toFixed(1)} ft · ${b.band}`;
+  }
+
+  function scoreHour(r, board=activeBoard()){
+    const eScore=energyScore(r.energy,board);
+    const pScore=trapezoid(r.swellPeriod,board.periodLow,board.periodHigh,5.5, board.mode==='demo'?15:17);
+    const dScore=directionScore(r.swellDir);
+    const wScore=windScore(r.windDir,r.windSpeed,board);
+    const tScore=r.tide.score;
+    const whScore=totalWaveScore(r.waveHeight,board);
+    let total=.30*eScore+.15*pScore+.15*dScore+.25*wScore+.10*tScore+.05*whScore;
+    // First-demo limiter: don't let clean wind disguise an overly consequential swell.
+    if(board.mode==='demo'){
+      if(r.energy>145) total=Math.min(total,48);
+      if(r.swellPeriod>=14 && r.swellHeight>=2.5) total=Math.min(total,52);
+      if(r.waveHeight>=4.5) total=Math.min(total,50);
+    }
+    // Very buoyant boards are great in weaker surf but become a paddle-out liability as faces get larger.
+    if(Number(board.boardVolume)>=50 && r.breaking){
+      if(r.breaking.high>=6.5) total=Math.min(total,42);
+      else if(r.breaking.high>=5.2) total=Math.min(total,58);
+    }
+    return Math.round(clamp(total,0,100));
+  }
+
+  function reasonFor(w, board=activeBoard()){
+    const bits=[];
+    if(w.energy>=board.energyLow && w.energy<=board.energyHigh) bits.push('swell power sits in this board’s target range');
+    else if(w.energy<board.energyLow) bits.push(Number(board.boardVolume)>=50?'conditions may be weak but the extra glide helps':'swell may be too weak to judge this board fairly');
+    else bits.push(board.mode==='demo'?'swell is more powerful than ideal for a first session':'swell is above this board’s preferred range');
+    if(w.windScore>=82) bits.push('wind is favorable'); else if(w.windScore<50) bits.push('wind is likely to add chop or onshore texture');
+    if(w.period>=board.periodLow && w.period<=board.periodHigh) bits.push('period is in the preferred band');
+    else if(w.period>board.periodHigh+1) bits.push('longer period raises punch and consequence');
+    if(Number(board.boardVolume)>=50 && w.breaking?.high>=5.2) bits.push('high volume makes repeated duck-dives costly');
+    else if(w.tideScore>=90) bits.push('tide phase is favorable');
+    return bits.slice(0,3).join('; ') + '.';
+  }
+
+  function aggregateWindow(slice, board=activeBoard()){
+    const mean = key => avg(slice.map(r=>r[key]).filter(v=>v!=null));
+    const circMean = key => { // adequate for narrow directional spread
+      const vals=slice.map(r=>r[key]).filter(v=>v!=null); if(!vals.length)return null;
+      let x=0,y=0; vals.forEach(d=>{const rad=d*Math.PI/180;x+=Math.cos(rad);y+=Math.sin(rad)}); return (Math.atan2(y,x)*180/Math.PI+360)%360;
+    };
+    const start=slice[0].time, end=new Date(slice[slice.length-1].time.getTime()+3600000);
+    const score=Math.round(avg(slice.map(r=>scoreHour(r,board))));
+    const w={start,end,score,
+      swellHeight:mean('swellHeight'),period:mean('swellPeriod'),swellDir:circMean('swellDir'),energy:mean('energy'),
+      secondaryHeight:mean('secondaryHeight'),secondaryPeriod:mean('secondaryPeriod'),secondaryDir:circMean('secondaryDir'),
+      waveHeight:mean('waveHeight'),wavePeriod:mean('wavePeriod'),waveDir:circMean('waveDir'),windSpeed:mean('windSpeed'),windDir:circMean('windDir'),windScore:avg(slice.map(r=>windScore(r.windDir,r.windSpeed,board))),tideScore:mean('tideScore'),
+      tideLabel:slice[Math.floor(slice.length/2)].tide.label
+    };
+    w.breaking=breakingEstimate({waveHeight:w.waveHeight,wavePeriod:w.wavePeriod,waveDir:w.waveDir,swellHeight:w.swellHeight,swellPeriod:w.period,swellDir:w.swellDir,secondaryHeight:w.secondaryHeight,secondaryPeriod:w.secondaryPeriod,secondaryDir:w.secondaryDir,windSpeed:w.windSpeed});
+    w.reason=reasonFor(w,board); return w;
+  }
+
+  const mToFt = m => Number.isFinite(m) ? m*3.28084 : null;
+  const msToMph = ms => Number.isFinite(ms) ? ms*2.23694 : null;
+  const validNum = v => (v==null || v==='' || !Number.isFinite(Number(v)) || Number(v)<=-999) ? null : Number(v);
+
+  function nearestModelRow(time){
+    if(!rows.length || !time) return null;
+    return rows.reduce((best,r)=>!best || Math.abs(r.time-time)<Math.abs(best.time-time)?r:best,null);
+  }
+
+  function localDateValue(d=new Date()){
+    const parts=new Intl.DateTimeFormat('en-CA',{timeZone:SPOT.timezone,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);
+    const o=Object.fromEntries(parts.filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
+    return `${o.year}-${o.month}-${o.day}`;
+  }
+  function localTimeValue(d=new Date()){
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:SPOT.timezone,hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d);
+    const o=Object.fromEntries(parts.filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
+    return `${o.hour==='24'?'00':o.hour}:${o.minute}`;
+  }
+  function parseLocalSessionDate(dateStr,timeStr){
+    const d=new Date(`${dateStr}T${timeStr || '12:00'}:00`);
+    return Number.isNaN(d.getTime())?null:d;
+  }
+  function boardById(id){ return state.boards.find(b=>b.id===id) || null; }
+  function snapshotConditions(sessionDate,board){
+    if(!sessionDate || !board) return null;
+    const model=nearestModelRow(sessionDate);
+    if(!model || Math.abs(model.time-sessionDate)>4*3600000) return null;
+    const boardScore=scoreHour(model,board);
+    const snap={
+      modelTime:model.time.toISOString(),boardScore,
+      swellHeight:model.swellHeight,swellPeriod:model.swellPeriod,swellDir:model.swellDir,energy:model.energy,
+      waveHeight:model.waveHeight,wavePeriod:model.wavePeriod,waveDir:model.waveDir,
+      windSpeed:model.windSpeed,windDir:model.windDir,windGust:model.windGust,
+      tideLabel:model.tide?.label||'—',breaking:model.breaking?{low:model.breaking.low,high:model.breaking.high,center:model.breaking.center,band:model.breaking.band}:null
+    };
+    if(buoy && Math.abs(buoy.time-sessionDate)<=4*3600000){
+      snap.buoy={time:buoy.time.toISOString(),waveHeight:buoy.waveHeight,dominantPeriod:buoy.dominantPeriod,waveDir:buoy.waveDir,swellHeight:buoy.swellHeight,swellPeriod:buoy.swellPeriod,swellDir:buoy.swellDir};
+    }
+    return snap;
+  }
+  function avgSessionRating(list,key){
+    const vals=list.map(s=>Number(s.ratings?.[key])).filter(Number.isFinite);
+    return vals.length?avg(vals):null;
+  }
+  function calibrationText(list){
+    const usable=list.filter(s=>Number(s.ratings?.overall)>=4 && Number.isFinite(s.conditions?.energy));
+    if(usable.length<3) return `Need ${3-usable.length}+ good session${3-usable.length===1?'':'s'}`;
+    const e=avg(usable.map(s=>s.conditions.energy));
+    const p=avg(usable.map(s=>s.conditions.swellPeriod).filter(Number.isFinite));
+    const f=avg(usable.map(s=>s.conditions.breaking?.center).filter(Number.isFinite));
+    const pieces=[`${Math.round(e)} energy`];
+    if(Number.isFinite(p)) pieces.push(`${p.toFixed(0)}s`);
+    if(Number.isFinite(f)) pieces.push(`~${f.toFixed(1)} ft faces`);
+    return pieces.join(' · ');
+  }
+  function conditionSummary(c){
+    if(!c) return 'Conditions not captured';
+    const parts=[];
+    if(Number.isFinite(c.swellHeight)) parts.push(`${c.swellHeight.toFixed(1)}' @ ${Number(c.swellPeriod).toFixed(0)}s ${degToCompass(c.swellDir)}`);
+    if(Number.isFinite(c.energy)) parts.push(`energy ${Math.round(c.energy)}`);
+    if(c.breaking) parts.push(`est. ${c.breaking.low.toFixed(1)}–${c.breaking.high.toFixed(1)} ft ${c.breaking.band}`);
+    if(Number.isFinite(c.windSpeed)) parts.push(`${c.windSpeed.toFixed(0)} mph ${degToCompass(c.windDir)}`);
+    if(c.tideLabel) parts.push(c.tideLabel);
+    if(Number.isFinite(c.boardScore)) parts.push(`app score ${c.boardScore}`);
+    return parts.join(' · ');
+  }
+  function sessionDateLabel(s){
+    const d=parseLocalSessionDate(s.date,s.time);
+    return d?`${fmtDay(d)} · ${fmtTime(d)}`:`${s.date} ${s.time||''}`;
+  }
+
+  function csvCell(value){
+    if(value==null) return '""';
+    const text=String(value).replace(/"/g,'""');
+    return `"${text}"`;
+  }
+  function csvNumber(value,digits=null){
+    const n=Number(value);
+    if(!Number.isFinite(n)) return '';
+    return digits==null?String(n):n.toFixed(digits);
+  }
+  function exportSessionsCsv(){
+    const sessions=(state.sessions||[]).slice().sort((a,b)=>`${a.date}T${a.time||'00:00'}`.localeCompare(`${b.date}T${b.time||'00:00'}`));
+    if(!sessions.length) return;
+    const columns=[
+      ['session_id',s=>s.id],['date',s=>s.date],['time',s=>s.time],['board_id',s=>s.boardId],['board_name',s=>s.boardName||boardById(s.boardId)?.name||''],
+      ['board_length',s=>s.boardLength||boardById(s.boardId)?.boardLength||''],['board_volume_l',s=>csvNumber(s.boardVolume||boardById(s.boardId)?.boardVolume,1)],
+      ['duration_min',s=>csvNumber(s.minutes)],['waves_caught',s=>s.waves===''?'':csvNumber(s.waves)],
+      ['overall_1_5',s=>csvNumber(s.ratings?.overall)],['wave_quality_1_5',s=>csvNumber(s.ratings?.waveQuality)],['wave_catching_1_5',s=>csvNumber(s.ratings?.catch)],
+      ['stability_1_5',s=>csvNumber(s.ratings?.stability)],['paddle_out_1_5',s=>csvNumber(s.ratings?.paddle)],['duck_dive_1_5',s=>csvNumber(s.ratings?.duck)],['turns_control_1_5',s=>csvNumber(s.ratings?.turns)],
+      ['forecast_model_time',s=>s.conditions?.modelTime||''],['app_board_score',s=>csvNumber(s.conditions?.boardScore)],
+      ['primary_swell_ft',s=>csvNumber(s.conditions?.swellHeight,2)],['primary_swell_period_s',s=>csvNumber(s.conditions?.swellPeriod,1)],['primary_swell_dir_deg',s=>csvNumber(s.conditions?.swellDir,0)],['primary_swell_dir',s=>Number.isFinite(Number(s.conditions?.swellDir))?degToCompass(Number(s.conditions.swellDir)):''],['relative_energy',s=>csvNumber(s.conditions?.energy,1)],
+      ['total_wave_ft',s=>csvNumber(s.conditions?.waveHeight,2)],['total_wave_period_s',s=>csvNumber(s.conditions?.wavePeriod,1)],['total_wave_dir_deg',s=>csvNumber(s.conditions?.waveDir,0)],['total_wave_dir',s=>Number.isFinite(Number(s.conditions?.waveDir))?degToCompass(Number(s.conditions.waveDir)):''],
+      ['wind_mph',s=>csvNumber(s.conditions?.windSpeed,1)],['wind_dir_deg',s=>csvNumber(s.conditions?.windDir,0)],['wind_dir',s=>Number.isFinite(Number(s.conditions?.windDir))?degToCompass(Number(s.conditions.windDir)):''],['wind_gust_mph',s=>csvNumber(s.conditions?.windGust,1)],['tide_phase',s=>s.conditions?.tideLabel||''],
+      ['est_break_low_ft',s=>csvNumber(s.conditions?.breaking?.low,2)],['est_break_center_ft',s=>csvNumber(s.conditions?.breaking?.center,2)],['est_break_high_ft',s=>csvNumber(s.conditions?.breaking?.high,2)],['est_break_band',s=>s.conditions?.breaking?.band||''],
+      ['buoy_time',s=>s.conditions?.buoy?.time||''],['buoy_total_wave_ft',s=>csvNumber(s.conditions?.buoy?.waveHeight,2)],['buoy_dominant_period_s',s=>csvNumber(s.conditions?.buoy?.dominantPeriod,1)],['buoy_wave_dir_deg',s=>csvNumber(s.conditions?.buoy?.waveDir,0)],['buoy_wave_dir',s=>Number.isFinite(Number(s.conditions?.buoy?.waveDir))?degToCompass(Number(s.conditions.buoy.waveDir)):''],
+      ['buoy_swell_ft',s=>csvNumber(s.conditions?.buoy?.swellHeight,2)],['buoy_swell_period_s',s=>csvNumber(s.conditions?.buoy?.swellPeriod,1)],['buoy_swell_dir_deg',s=>csvNumber(s.conditions?.buoy?.swellDir,0)],['buoy_swell_dir',s=>Number.isFinite(Number(s.conditions?.buoy?.swellDir))?degToCompass(Number(s.conditions.buoy.swellDir)):''],
+      ['notes',s=>s.notes||''],['created_at',s=>s.createdAt||''],['updated_at',s=>s.updatedAt||'']
+    ];
+    const lines=[columns.map(([name])=>csvCell(name)).join(',')];
+    for(const session of sessions) lines.push(columns.map(([,getter])=>csvCell(getter(session))).join(','));
+    const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download=`rockaway-surf-sessions_${localDateValue(new Date())}.csv`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+  function renderSessions(){
+    const sessions=(state.sessions||[]).slice().sort((a,b)=>`${b.date}T${b.time||'00:00'}`.localeCompare(`${a.date}T${a.time||'00:00'}`));
+    const active=sessions.filter(x=>x.boardId===state.activeBoardId);
+    $('sTotal').textContent=sessions.length;
+    $('sBoardCount').textContent=active.length;
+    const ao=avgSessionRating(active,'overall'); $('sAvgOverall').textContent=ao!=null?`${ao.toFixed(1)} / 5`:'—';
+    $('sCalibration').textContent=calibrationText(active);
+    $('exportSessionsBtn').disabled=!sessions.length;
+    $('exportSessionsBtn').title=sessions.length?'Export all logged sessions as CSV':'Log a session before exporting';
+    if(!sessions.length){
+      $('sessionList').innerHTML='<div class="empty-state">No sessions yet. Log your next surf and the app will start building a board-specific condition history.</div>';
+      return;
+    }
+    $('sessionList').innerHTML=sessions.slice(0,10).map(sess=>{
+      const b=boardById(sess.boardId); const r=sess.ratings||{};
+      const boardName=sess.boardName || b?.name || 'Deleted board';
+      const boardMeta=[sess.boardLength||b?.boardLength,sess.boardVolume||b?.boardVolume?`${sess.boardVolume||b?.boardVolume} L`:null].filter(Boolean).join(' · ');
+      const chips=[['Waves',r.waveQuality],['Catch',r.catch],['Stability',r.stability],['Paddle',r.paddle],['Duck',r.duck],['Turns',r.turns]].map(([k,v])=>`<span class="rating-chip">${k} <strong>${v||'—'}/5</strong></span>`).join('');
+      const extras=[sess.minutes?`${sess.minutes} min`:null,Number.isFinite(Number(sess.waves))&&sess.waves!==''?`${sess.waves} waves`:null].filter(Boolean).join(' · ');
+      return `<article class="session-card"><div class="session-head"><div><h3>${escapeHtml(sessionDateLabel(sess))} · ${escapeHtml(boardName)}</h3><div class="meta">${escapeHtml(boardMeta)}${extras?` · ${escapeHtml(extras)}`:''}</div></div><div class="session-score">${r.overall||'—'} / 5 overall</div></div><div class="session-ratings">${chips}</div><div class="session-conditions">${escapeHtml(conditionSummary(sess.conditions))}</div>${sess.notes?`<p class="session-notes">${escapeHtml(sess.notes)}</p>`:''}<div class="session-actions"><button class="btn" type="button" data-edit-session="${escapeHtml(sess.id)}">Edit</button></div></article>`;
+    }).join('');
+    document.querySelectorAll('[data-edit-session]').forEach(btn=>btn.addEventListener('click',()=>openSessionDialog(btn.dataset.editSession)));
+  }
+
+  let editingSessionId=null;
+  function syncSessionBoardOptions(selectedId=state.activeBoardId){
+    $('sessionBoard').innerHTML=state.boards.map(b=>`<option value="${escapeHtml(b.id)}">${escapeHtml(b.name)} · ${escapeHtml(b.boardLength)} · ${Number(b.boardVolume).toFixed(0)} L</option>`).join('');
+    $('sessionBoard').value=state.boards.some(b=>b.id===selectedId)?selectedId:state.activeBoardId;
+  }
+  function openSessionDialog(id=null){
+    editingSessionId=id;
+    const sess=id?(state.sessions||[]).find(s=>s.id===id):null;
+    $('sessionDialogTitle').textContent=sess?'Edit surf session':'Log surf session';
+    syncSessionBoardOptions(sess?.boardId||state.activeBoardId);
+    const now=new Date();
+    $('sessionDate').value=sess?.date||localDateValue(now); $('sessionTime').value=sess?.time||localTimeValue(now);
+    $('sessionMinutes').value=sess?.minutes||90; $('sessionWaves').value=sess?.waves??'';
+    const defaults={overall:3,waveQuality:3,catch:3,stability:3,paddle:3,duck:3,turns:3};
+    for(const [key,id2] of Object.entries({overall:'rOverall',waveQuality:'rWaveQuality',catch:'rCatch',stability:'rStability',paddle:'rPaddle',duck:'rDuck',turns:'rTurns'})) $(id2).value=sess?.ratings?.[key]??defaults[key];
+    $('sessionNotes').value=sess?.notes||'';
+    $('deleteSessionBtn').style.visibility=sess?'visible':'hidden';
+    updateSessionConditionHint(); $('sessionDialog').showModal();
+  }
+  function updateSessionConditionHint(){
+    const d=parseLocalSessionDate($('sessionDate').value,$('sessionTime').value); const b=boardById($('sessionBoard').value);
+    const c=snapshotConditions(d,b);
+    $('sessionConditionHint').textContent=c?`Will attach: ${conditionSummary(c)}`:'No nearby loaded forecast hour is available; the ratings and notes will still be saved.';
+  }
+  function saveSessionFromForm(){
+    const date=$('sessionDate').value, time=$('sessionTime').value, board=boardById($('sessionBoard').value);
+    if(!date || !time || !board) return false;
+    const sessionDate=parseLocalSessionDate(date,time); if(!sessionDate) return false;
+    const existing=editingSessionId?(state.sessions||[]).find(s=>s.id===editingSessionId):null;
+    const freshConditions=snapshotConditions(sessionDate,board);
+    const entry={
+      id:editingSessionId||`session-${Date.now().toString(36)}`,date,time,boardId:board.id,boardName:board.name,boardLength:board.boardLength,boardVolume:board.boardVolume,
+      minutes:clamp(Number($('sessionMinutes').value)||90,10,480),waves:$('sessionWaves').value===''?'':clamp(Number($('sessionWaves').value)||0,0,100),
+      ratings:{overall:+$('rOverall').value,waveQuality:+$('rWaveQuality').value,catch:+$('rCatch').value,stability:+$('rStability').value,paddle:+$('rPaddle').value,duck:+$('rDuck').value,turns:+$('rTurns').value},
+      notes:$('sessionNotes').value.trim(),conditions:freshConditions||existing?.conditions||null,createdAt:existing?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()
+    };
+    const ix=(state.sessions||[]).findIndex(s=>s.id===entry.id); if(ix>=0) state.sessions[ix]=entry; else (state.sessions||(state.sessions=[])).push(entry);
+    saveState(); renderSessions(); return true;
+  }
+  function deleteEditingSession(){
+    if(!editingSessionId) return;
+    const sess=(state.sessions||[]).find(s=>s.id===editingSessionId); if(!sess) return;
+    if(!confirm(`Delete the ${sess.date} session?`)) return;
+    state.sessions=state.sessions.filter(s=>s.id!==editingSessionId); saveState(); $('sessionDialog').close(); editingSessionId=null; renderSessions();
+  }
+
+  function modelDeltaText(observed, modeled, unit='ft'){
+    if(!Number.isFinite(observed) || !Number.isFinite(modeled)) return {head:'Comparison unavailable',note:'One of the feeds is missing this measurement.'};
+    const d=observed-modeled, a=Math.abs(d);
+    let verdict=a<=0.35?'Model is close':d>0?'Buoy is running above model':'Buoy is running below model';
+    return {head:`${verdict} · ${d>=0?'+':''}${d.toFixed(1)} ${unit}`,note:`Buoy ${observed.toFixed(1)} ${unit} vs model ${modeled.toFixed(1)} ${unit} at the nearest forecast hour.`};
+  }
+
+  async function fetchBuoy(){
+    buoy=null;
+    $('buoySourceChip').innerHTML='<strong>Buoy:</strong> 44065 loading…';
+    // NDBC's own flat files do not expose browser CORS. This IOOS ERDDAP dataset mirrors NDBC 44065 and includes spectral partitions.
+    const vars=['time','sea_surface_wave_significant_height','sea_surface_wave_period_at_variance_spectral_density_maximum','sea_surface_wave_from_direction','sea_surface_swell_wave_significant_height','sea_surface_swell_wave_period','sea_surface_swell_wave_from_direction','sea_surface_wind_wave_significant_height','sea_surface_wind_wave_period','sea_surface_wind_wave_from_direction','wind_speed','wind_from_direction'];
+    const url=`https://erddap.sensors.axds.co/erddap/tabledap/gov-ndbc-44065.json?${vars.join(',')}&time%3E%3Dnow-2days`;
+    try{
+      const res=await fetch(url);
+      if(!res.ok) throw new Error(`ERDDAP ${res.status}`);
+      const j=await res.json();
+      const names=j?.table?.columnNames||[], data=j?.table?.rows||[];
+      if(!data.length) throw new Error('no recent buoy rows');
+      const ix=Object.fromEntries(names.map((n,i)=>[n,i]));
+      // Use the most recent row with a valid total wave height; fall back to the latest row.
+      const chosen=[...data].reverse().find(r=>validNum(r[ix.sea_surface_wave_significant_height])!=null) || data[data.length-1];
+      const get=n=>ix[n]==null?null:validNum(chosen[ix[n]]);
+      buoy={
+        time:new Date(chosen[ix.time]),
+        waveHeight:mToFt(get('sea_surface_wave_significant_height')),
+        dominantPeriod:get('sea_surface_wave_period_at_variance_spectral_density_maximum'),
+        waveDir:get('sea_surface_wave_from_direction'),
+        swellHeight:mToFt(get('sea_surface_swell_wave_significant_height')),
+        swellPeriod:get('sea_surface_swell_wave_period'),
+        swellDir:get('sea_surface_swell_wave_from_direction'),
+        windWaveHeight:mToFt(get('sea_surface_wind_wave_significant_height')),
+        windWavePeriod:get('sea_surface_wind_wave_period'),
+        windWaveDir:get('sea_surface_wind_wave_from_direction'),
+        windSpeed:msToMph(get('wind_speed')),
+        windDir:get('wind_from_direction')
+      };
+      renderBuoy();
+    }catch(err){
+      $('buoyHeadline').textContent='Buoy feed unavailable';
+      $('buoyTime').textContent=`Could not read the IOOS mirror (${err.message}). Forecast data still work normally.`;
+      $('buoyFreshness').textContent='offline'; $('buoyFreshness').style.color='var(--bad)';
+      $('buoySourceChip').innerHTML='<strong>Buoy:</strong> 44065 unavailable';
+      ['bSwell','bWindWave','bWind','bEnergy'].forEach(id=>$(id).textContent='—'); $('bBreakEstimate').textContent='—';
+      $('bModelWave').textContent='No live buoy observation'; $('bModelSwell').textContent='No live buoy observation';
+      $('bInterpretation').textContent='Use the forecast normally; verify conditions visually.';
+    }
+  }
+
+  function renderBuoy(){
+    if(!buoy) return;
+    const ageH=(Date.now()-buoy.time.getTime())/3600000;
+    const fresh=ageH<=1.5, stale=ageH>3;
+    $('buoyFreshness').textContent=fresh?'live':stale?'stale':`${Math.round(ageH*60)}m old`;
+    $('buoyFreshness').style.color=fresh?'var(--good)':stale?'var(--bad)':'var(--warn)';
+    $('buoySourceChip').innerHTML=`<strong>Buoy:</strong> 44065 ${fresh?'live':stale?'stale':'recent'}`;
+    const headlineH=Number.isFinite(buoy.waveHeight)?`${buoy.waveHeight.toFixed(1)} ft`: '—';
+    const headlineP=Number.isFinite(buoy.dominantPeriod)?` @ ${buoy.dominantPeriod.toFixed(0)}s`:'';
+    const headlineD=Number.isFinite(buoy.waveDir)?` ${degToCompass(buoy.waveDir)}`:'';
+    $('buoyHeadline').textContent=`${headlineH}${headlineP}${headlineD}`;
+    $('buoyTime').textContent=`Observed ${new Intl.DateTimeFormat('en-US',{weekday:'short',hour:'numeric',minute:'2-digit',timeZone:SPOT.timezone}).format(buoy.time)} · NOAA/NDBC 44065 via IOOS ERDDAP`;
+    $('bSwell').textContent=Number.isFinite(buoy.swellHeight)?`${buoy.swellHeight.toFixed(1)}' @ ${buoy.swellPeriod?.toFixed(0)??'—'}s ${degToCompass(buoy.swellDir)}`:'—';
+    $('bWindWave').textContent=Number.isFinite(buoy.windWaveHeight)?`${buoy.windWaveHeight.toFixed(1)}' @ ${buoy.windWavePeriod?.toFixed(0)??'—'}s ${degToCompass(buoy.windWaveDir)}`:'—';
+    $('bWind').textContent=Number.isFinite(buoy.windSpeed)?`${buoy.windSpeed.toFixed(0)} mph ${degToCompass(buoy.windDir)}`:'—';
+    const e=(Number.isFinite(buoy.swellHeight)&&Number.isFinite(buoy.swellPeriod))?buoy.swellHeight*buoy.swellHeight*buoy.swellPeriod:null;
+    $('bEnergy').textContent=Number.isFinite(e)?`${Math.round(e)} · observed`:'—';
+    const buoyBreak=breakingEstimate({waveHeight:buoy.waveHeight,wavePeriod:buoy.dominantPeriod,waveDir:buoy.waveDir,swellHeight:buoy.swellHeight,swellPeriod:buoy.swellPeriod,swellDir:buoy.swellDir,windSpeed:buoy.windSpeed});
+    $('bBreakEstimate').textContent=breakText(buoyBreak);
+    $('bBreakEstimateNote').textContent=buoyBreak?`Buoy-energy estimate · ${buoyBreak.confidence} confidence. Sandbar and tide can shift individual peaks materially.`:'Not enough buoy variables for an estimate.';
+
+    const model=nearestModelRow(buoy.time);
+    if(model){
+      const tw=modelDeltaText(buoy.waveHeight,model.waveHeight);
+      $('bModelWave').textContent=tw.head; $('bModelWaveNote').textContent=tw.note;
+      const sw=modelDeltaText(buoy.swellHeight,model.swellHeight);
+      $('bModelSwell').textContent=sw.head;
+      $('bModelSwellNote').textContent=Number.isFinite(buoy.swellPeriod)&&Number.isFinite(model.swellPeriod)?`${sw.note} Period: buoy ${buoy.swellPeriod.toFixed(0)}s vs model ${model.swellPeriod.toFixed(0)}s.`:sw.note;
+      let msg='Forecast is broadly tracking offshore observations.';
+      if(Number.isFinite(buoy.waveHeight)&&Number.isFinite(model.waveHeight)){
+        const diff=buoy.waveHeight-model.waveHeight;
+        if(diff>0.6) msg='Actual offshore sea is running bigger than the model right now.';
+        else if(diff<-0.6) msg='Actual offshore sea is running smaller than the model right now.';
+      }
+      $('bInterpretation').textContent=msg;
+    }
+  }
+
+  function updateConnectivity(){
+    const online=navigator.onLine;
+    $('connectivityChip').innerHTML=`<strong>Network:</strong> ${online?'online':'offline'}`;
+    $('connectivityChip').style.color=online?'var(--muted)':'var(--warn)';
+  }
+
+  function saveForecastCache(){
+    if(!rows.length) return;
+    try{
+      const payload={
+        savedAt:new Date().toISOString(),
+        tideSource,
+        rows:rows.map(r=>({...r,time:r.time.toISOString()})),
+        solar:[...solarMap.entries()].map(([k,v])=>[k,{sunrise:v.sunrise.toISOString(),sunset:v.sunset.toISOString()}]),
+        buoy:buoy?{...buoy,time:buoy.time.toISOString()}:null
+      };
+      localStorage.setItem(FORECAST_CACHE_KEY,JSON.stringify(payload));
+    }catch(_){ /* cache is optional */ }
+  }
+
+  function restoreForecastCache(){
+    try{
+      const cached=JSON.parse(localStorage.getItem(FORECAST_CACHE_KEY)||'null');
+      if(!cached || !Array.isArray(cached.rows) || !cached.rows.length) return null;
+      rows=cached.rows.map(r=>({...r,time:new Date(r.time)}));
+      solarMap=new Map((cached.solar||[]).map(([k,v])=>[k,{sunrise:new Date(v.sunrise),sunset:new Date(v.sunset)}]));
+      tideSource=cached.tideSource||'Cached tide data';
+      buoy=cached.buoy?{...cached.buoy,time:new Date(cached.buoy.time)}:null;
+      render();
+      if(buoy) renderBuoy();
+      const saved=new Date(cached.savedAt);
+      const ageH=(Date.now()-saved.getTime())/3600000;
+      const age=ageH<1?`${Math.max(1,Math.round(ageH*60))}m ago`:ageH<24?`${Math.round(ageH)}h ago`:`${Math.round(ageH/24)}d ago`;
+      $('updatedChip').textContent=`Offline cache · ${age}`;
+      $('tideSourceChip').innerHTML=`<strong>Tides:</strong> cached ${tideSource.replace('NOAA Sandy Hook','NOAA Sandy Hook')}`;
+      $('sourceLabel').textContent='Cached forecast · reconnect and refresh for current conditions';
+      return {savedAt:saved,ageH};
+    }catch(_){ return null; }
+  }
+
+  async function registerPwa(){
+    updateConnectivity();
+    if(window.AndroidBridge){ $('installBtn').hidden=true; syncNativeState(); }
+    window.addEventListener('online',()=>{updateConnectivity();fetchForecast();});
+    window.addEventListener('offline',updateConnectivity);
+    window.addEventListener('beforeinstallprompt',e=>{
+      e.preventDefault();
+      deferredInstallPrompt=e;
+      $('installBtn').hidden=false;
+    });
+    window.addEventListener('appinstalled',()=>{
+      deferredInstallPrompt=null;
+      $('installBtn').hidden=true;
+    });
+    $('installBtn').addEventListener('click',async()=>{
+      if(!deferredInstallPrompt){
+        alert('Use your browser menu and choose “Install app” or “Add to Home screen”.');
+        return;
+      }
+      deferredInstallPrompt.prompt();
+      try{ await deferredInstallPrompt.userChoice; }catch(_){ }
+      deferredInstallPrompt=null;
+      $('installBtn').hidden=true;
+    });
+    if('serviceWorker' in navigator){
+      try{ await navigator.serviceWorker.register('./sw.js',{scope:'./'}); }catch(err){ console.warn('Service worker registration failed',err); }
+    }
+  }
+
+  async function fetchForecast(){
+    $('loading').style.display='block'; $('error').style.display='none';
+    const buoyPromise=fetchBuoy();
+    try{
+      const d=settings.daysCount;
+      const marineURL=`https://marine-api.open-meteo.com/v1/marine?latitude=${SPOT.lat}&longitude=${SPOT.lon}&hourly=wave_height,wave_direction,wave_period,swell_wave_height,swell_wave_direction,swell_wave_period,secondary_swell_wave_height,secondary_swell_wave_period,secondary_swell_wave_direction,sea_level_height_msl&length_unit=imperial&timezone=${encodeURIComponent(SPOT.timezone)}&forecast_days=${d}&cell_selection=sea`;
+      const weatherURL=`https://api.open-meteo.com/v1/forecast?latitude=${SPOT.lat}&longitude=${SPOT.lon}&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=sunrise,sunset&wind_speed_unit=mph&timezone=${encodeURIComponent(SPOT.timezone)}&forecast_days=${d}`;
+      const start=noaaDateString(new Date());
+      const end=noaaDateString(new Date(Date.now()+(d+1)*86400000));
+      const noaaURL=`https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=${start}&end_date=${end}&station=8531680&product=predictions&datum=MLLW&time_zone=lst_ldt&interval=h&units=english&application=RockawayBoardWindow&format=json`;
+      const [mRes,wRes,tRes]=await Promise.all([fetch(marineURL),fetch(weatherURL),fetch(noaaURL).catch(()=>null)]);
+      if(!mRes.ok||!wRes.ok) throw new Error(`Forecast service returned ${mRes.status}/${wRes.status}.`);
+      const [m,w]=await Promise.all([mRes.json(),wRes.json()]);
+      noaaTides=[]; tideSource='Open-Meteo fallback';
+      if(tRes && tRes.ok){
+        try{
+          const tj=await tRes.json();
+          if(Array.isArray(tj.predictions) && tj.predictions.length){
+            noaaTides=tj.predictions.map(p=>({key:normalizeNoaaTime(p.t),value:Number(p.v)})).filter(x=>Number.isFinite(x.value));
+            if(noaaTides.length) tideSource='NOAA Sandy Hook';
+          }
+        }catch(_){ /* fallback handled below */ }
+      }
+      buildRows(m,w); render();
+      saveForecastCache();
+      await buoyPromise; if(buoy) renderBuoy();
+      saveForecastCache();
+      $('tideSourceChip').innerHTML=`<strong>Tides:</strong> ${tideSource==='NOAA Sandy Hook'?'NOAA Sandy Hook':'Open-Meteo fallback'}`;
+      $('sourceLabel').textContent=tideSource==='NOAA Sandy Hook'?'Open-Meteo marine + weather · NOAA tides':'Open-Meteo marine + weather + tide fallback';
+      $('updatedChip').textContent='Updated '+new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit'}).format(new Date());
+    }catch(err){
+      await buoyPromise;
+      const cached=restoreForecastCache();
+      $('error').style.display='block';
+      if(cached){
+        const stale=cached.ageH>24?' This cache is more than a day old and should not be used for surf-safety decisions.':'';
+        $('error').innerHTML=`<strong>Offline / live feeds unavailable.</strong> Showing the last saved forecast.${stale}<br><span style="color:var(--muted)">Reconnect and tap Refresh to update Open-Meteo, NOAA tides, and buoy 44065.</span>`;
+      }else{
+        $('error').innerHTML=`<strong>Couldn’t load live forecast.</strong> ${err.message}<br><span style="color:var(--muted)">This PWA needs internet for fresh conditions. Once it has loaded successfully, the last forecast is retained for offline viewing.</span>`;
+        $('heroLabel').textContent='Forecast unavailable'; $('heroWhy').textContent='The app shell is available offline, but there is no saved forecast on this device yet.';
+      }
+    }finally{$('loading').style.display='none'}
+  }
+
+  function buildRows(m,w){
+    solarMap = new Map((w.daily?.time || []).map((d,i)=>[d,{sunrise:new Date(w.daily.sunrise[i]),sunset:new Date(w.daily.sunset[i])}]));
+    const weatherMap=new Map(w.hourly.time.map((t,i)=>[t,i]));
+    rows=m.hourly.time.map((t,i)=>{
+      const wi=weatherMap.get(t);
+      const swellHeight=m.hourly.swell_wave_height?.[i] ?? m.hourly.wave_height?.[i] ?? null;
+      const swellPeriod=m.hourly.swell_wave_period?.[i] ?? m.hourly.wave_period?.[i] ?? null;
+      const swellDir=m.hourly.swell_wave_direction?.[i] ?? null;
+      const tide=noaaTideInfo(t) || modeledTideInfo(i,m);
+      const r={time:new Date(t),waveHeight:m.hourly.wave_height?.[i]??null,wavePeriod:m.hourly.wave_period?.[i]??null,waveDir:m.hourly.wave_direction?.[i]??null,swellHeight,swellPeriod,swellDir,
+        secondaryHeight:m.hourly.secondary_swell_wave_height?.[i]??null,secondaryPeriod:m.hourly.secondary_swell_wave_period?.[i]??null,secondaryDir:m.hourly.secondary_swell_wave_direction?.[i]??null,
+        windSpeed:wi!=null?w.hourly.wind_speed_10m?.[wi]:null,windDir:wi!=null?w.hourly.wind_direction_10m?.[wi]:null,
+        windGust:wi!=null?w.hourly.wind_gusts_10m?.[wi]:null,tide};
+      r.energy=(swellHeight!=null&&swellPeriod!=null)?swellHeight*swellHeight*swellPeriod:null;
+      r.breaking=breakingEstimate(r);
+      r.windScore=windScore(r.windDir,r.windSpeed); r.tideScore=tide.score; r.score=scoreHour(r); return r;
+    });
+  }
+
+  function quiverPick(w){
+    if(!w || !state.boards.length) return null;
+    const pseudo={energy:w.energy,swellPeriod:w.period,swellDir:w.swellDir,windDir:w.windDir,windSpeed:w.windSpeed,tide:{score:w.tideScore},waveHeight:w.waveHeight,swellHeight:w.swellHeight,breaking:w.breaking};
+    return state.boards.map(board=>({board,score:scoreHour(pseudo,board)})).sort((a,b)=>b.score-a.score)[0]||null;
+  }
+
+  function daylightRows(){
+    const now=new Date();
+    return rows.filter(r=>{
+      if(r.time<now) return false;
+      const key=`${r.time.getFullYear()}-${String(r.time.getMonth()+1).padStart(2,'0')}-${String(r.time.getDate()).padStart(2,'0')}`;
+      const solar=solarMap.get(key);
+      if(!solar) return r.time.getHours()>=6 && r.time.getHours()<=18;
+      // Keep hourly blocks whose start is after sunrise and before sunset.
+      return r.time>=solar.sunrise && r.time<solar.sunset;
+    });
+  }
+
+  function windows(){
+    const r=daylightRows(); const out=[];
+    for(let i=0;i<r.length-2;i++){
+      if((r[i+2].time-r[i].time)!==7200000) continue;
+      if(r[i].time.toDateString()!==r[i+2].time.toDateString()) continue;
+      out.push(aggregateWindow(r.slice(i,i+3)));
+    }
+    return out;
+  }
+
+  function render(){
+    const board=activeBoard();
+    syncBoardSelectors();
+    $('modeChip').textContent=board.mode==='demo'?'First demo':'Regular progression';
+    document.querySelector('.sub').innerHTML=`A forecast tuned to one question: <strong>when is Rockaway a good match for ${escapeHtml(board.name)} (${escapeHtml(board.boardLength)} / ${board.boardVolume} L)?</strong>`;
+    const wins=windows().sort((a,b)=>b.score-a.score || a.start-b.start);
+    const best=wins[0];
+    if(best){
+      $('heroScore').style.setProperty('--scoreColor',scoreColor(best.score)); $('heroScore').querySelector('strong').textContent=best.score;
+      $('heroWhen').textContent=`${fmtDay(best.start)} · ${fmtTime(best.start)}–${fmtTime(best.end)}`;
+      $('heroLabel').textContent=scoreLabel(best.score); $('heroWhy').textContent=best.reason;
+      $('mSwell').textContent=`${best.swellHeight?.toFixed(1) ?? '—'}' @ ${best.period?.toFixed(0) ?? '—'}s ${degToCompass(best.swellDir)}`;
+      $('mEnergy').textContent=best.energy!=null?`${Math.round(best.energy)} · ${best.energy<30?'Low':best.energy<=90?'Moderate':best.energy<=130?'Punchy':'High'}`:'—';
+      $('mWind').textContent=`${best.windSpeed?.toFixed(0) ?? '—'} mph ${degToCompass(best.windDir)}`;
+      $('mTide').textContent=best.tideLabel; $('mBreak').textContent=breakText(best.breaking); $('mWave').textContent=`${best.waveHeight?.toFixed(1) ?? '—'} ft model`;
+      const pick=quiverPick(best); $('mBoardPick').textContent=pick?`${pick.board.name} · ${pick.score}`:'—';
+    }
+    $('bestList').innerHTML=wins.slice(0,3).map((w,i)=>{const pick=quiverPick(w);return `<div class="best-item"><div class="rank">#${i+1}</div><div><strong>${fmtShortDay(w.start)} ${fmtTime(w.start)}–${fmtTime(w.end)}</strong><div class="meta">${w.swellHeight.toFixed(1)}' @ ${w.period.toFixed(0)}s ${degToCompass(w.swellDir)} · est. ${w.breaking?`${w.breaking.low.toFixed(1)}–${w.breaking.high.toFixed(1)} ft faces`:'—'} · ${w.windSpeed.toFixed(0)} mph ${degToCompass(w.windDir)}${pick?` · quiver: ${escapeHtml(pick.board.name)} ${pick.score}`:''}</div></div><span class="pill" style="color:${scoreColor(w.score)}">${w.score}</span></div>`}).join('');
+
+    // Select non-overlapping 3-hour blocks (6,9,12,15) for each day for easy scanning.
+    const dayMap=new Map();
+    daylightRows().forEach(r=>{const k=r.time.toDateString();if(!dayMap.has(k))dayMap.set(k,[]);dayMap.get(k).push(r)});
+    $('days').innerHTML=[...dayMap.entries()].map(([k,rr])=>{
+      const chunks=[];
+      for(let h=6;h<=15;h+=3){const slice=rr.filter(r=>r.time.getHours()>=h&&r.time.getHours()<h+3);if(slice.length===3)chunks.push(aggregateWindow(slice));}
+      const top=chunks.length?Math.max(...chunks.map(c=>c.score)):null;
+      return `<div class="day"><div class="day-head"><strong>${fmtDay(rr[0].time)}</strong><span>${top!=null?'best '+top:''}</span></div>${chunks.map(w=>`<div class="window"><div><div class="window-time">${fmtTime(w.start)}–${fmtTime(w.end)}</div><div class="window-detail">${w.swellHeight.toFixed(1)}' @ ${w.period.toFixed(0)}s ${degToCompass(w.swellDir)} · est. ${w.breaking?`${w.breaking.low.toFixed(1)}–${w.breaking.high.toFixed(1)} ft ${w.breaking.band}`:'—'} · ${w.windSpeed.toFixed(0)} mph ${degToCompass(w.windDir)} · ${w.tideLabel}</div></div><span class="pill" style="color:${scoreColor(w.score)}">${w.score}</span></div>`).join('')||'<div class="window-detail">No complete daylight block.</div>'}</div>`;
+    }).join('');
+    renderSessions();
+  }
+
+  function escapeHtml(v){ return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function syncBoardSelectors(){
+    const options=state.boards.map(b=>`<option value="${escapeHtml(b.id)}">${escapeHtml(b.name)} · ${escapeHtml(b.boardLength)} · ${Number(b.boardVolume).toFixed(0)} L</option>`).join('');
+    ['boardSelect','manageBoardSelect'].forEach(id=>{
+      const el=$(id); if(!el) return; const prev=el.value; el.innerHTML=options; el.value=state.activeBoardId; if(!el.value && state.boards.length)el.value=state.boards[0].id;
+    });
+  }
+
+  function loadForm(){
+    const b=activeBoard();
+    $('scoringBoardName').textContent=`${b.name} · ${b.boardLength} · ${b.boardVolume} L`;
+    ['mode','energyLow','energyHigh','periodLow','periodHigh','maxWind'].forEach(k=>{if($(k))$(k).value=b[k]});
+    $('daysCount').value=state.daysCount;
+  }
+  function readScoringForm(){ return {mode:$('mode').value,energyLow:+$('energyLow').value,energyHigh:+$('energyHigh').value,periodLow:+$('periodLow').value,periodHigh:+$('periodHigh').value,maxWind:+$('maxWind').value}; }
+
+  function loadBoardEditor(){
+    syncBoardSelectors();
+    const b=activeBoard();
+    $('boardNameEdit').value=b.name||''; $('boardLengthEdit').value=b.boardLength||''; $('boardVolumeEdit').value=b.boardVolume||''; $('boardTypeEdit').value=b.boardType||'';
+    $('boardProfileSummary').innerHTML=`<div class="board-tag"><strong>${b.mode==='demo'?'First demo':'Regular'}</strong> mode</div><div class="board-tag">Energy <strong>${b.energyLow}–${b.energyHigh}</strong></div><div class="board-tag">Period <strong>${b.periodLow}–${b.periodHigh}s</strong></div>`;
+    $('deleteBoardBtn').disabled=state.boards.length<=1;
+  }
+
+  function selectBoard(id){
+    if(!state.boards.some(b=>b.id===id)) return;
+    state.activeBoardId=id; saveState(); render(); loadBoardEditor();
+  }
+
+  $('boardSelect').addEventListener('change',e=>selectBoard(e.target.value));
+  $('boardsBtn').addEventListener('click',()=>{loadBoardEditor();$('boardsDialog').showModal()});
+  $('manageBoardSelect').addEventListener('change',e=>selectBoard(e.target.value));
+  $('closeBoardsBtn').addEventListener('click',()=>$('boardsDialog').close());
+  $('saveBoardBtn').addEventListener('click',()=>{
+    const b=activeBoard();
+    const name=$('boardNameEdit').value.trim(); const length=$('boardLengthEdit').value.trim(); const volume=clamp(Number($('boardVolumeEdit').value)||b.boardVolume,20,90);
+    b.name=name||'Unnamed board'; b.boardLength=length||b.boardLength||"6'6"; b.boardVolume=Math.round(volume*2)/2; b.boardType=$('boardTypeEdit').value.trim();
+    saveState(); loadBoardEditor(); render();
+  });
+  $('newBoardBtn').addEventListener('click',()=>{
+    const id=`board-${Date.now().toString(36)}`; const volume=40; const profile=defaultProfileForVolume(volume);
+    state.boards.push({id,name:'New board',boardLength:"6'6",boardVolume:volume,boardType:'',...profile}); state.activeBoardId=id; saveState(); loadBoardEditor(); render();
+    $('boardNameEdit').select();
+  });
+  $('deleteBoardBtn').addEventListener('click',()=>{
+    if(state.boards.length<=1) return; const idx=state.boards.findIndex(b=>b.id===state.activeBoardId);
+    state.boards.splice(idx,1); state.activeBoardId=state.boards[Math.max(0,idx-1)]?.id||state.boards[0].id; saveState(); loadBoardEditor(); render();
+  });
+
+  $('logSessionBtn').addEventListener('click',()=>openSessionDialog());
+  $('logSessionInlineBtn').addEventListener('click',()=>openSessionDialog());
+  $('exportSessionsBtn').addEventListener('click',exportSessionsCsv);
+  $('cancelSessionBtn').addEventListener('click',()=>{$('sessionDialog').close();editingSessionId=null;});
+  $('deleteSessionBtn').addEventListener('click',deleteEditingSession);
+  $('sessionForm').addEventListener('submit',e=>{e.preventDefault();if(saveSessionFromForm()){$('sessionDialog').close();editingSessionId=null;}});
+  ['sessionDate','sessionTime','sessionBoard'].forEach(id=>$(id).addEventListener('change',updateSessionConditionHint));
+
+  $('settingsBtn').addEventListener('click',()=>{loadForm();$('settingsDialog').showModal()});
+  $('saveSettings').addEventListener('click',e=>{
+    e.preventDefault(); const b=activeBoard(), next=readScoringForm(); Object.assign(b,next); const oldDays=state.daysCount; state.daysCount=+$('daysCount').value||7; saveState(); $('settingsDialog').close();
+    if(state.daysCount!==oldDays) fetchForecast(); else render();
+  });
+  $('refreshBtn').addEventListener('click',fetchForecast);
+  $('mode').addEventListener('change',()=>{
+    const v=Number(activeBoard().boardVolume)||40; const p=defaultProfileForVolume(v);
+    if($('mode').value==='progression'){$('energyLow').value=Math.max(18,p.energyLow-5);$('energyHigh').value=Math.max(90,p.energyHigh+20);$('periodLow').value=Math.max(6.5,p.periodLow-.5);$('periodHigh').value=Math.max(12,p.periodHigh+1)}
+    else {$('energyLow').value=p.energyLow;$('energyHigh').value=p.energyHigh;$('periodLow').value=p.periodLow;$('periodHigh').value=p.periodHigh}
+  });
+  syncBoardSelectors();
+  renderSessions();
+  syncNativeState();
+  registerPwa();
+  fetchForecast();
+})();
+</script>
+</body>
+</html>

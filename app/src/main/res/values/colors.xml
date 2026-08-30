@@ -1,0 +1,10 @@
+<resources>
+    <color name="widget_bg">#EAF0F4</color>
+    <color name="widget_text">#13242C</color>
+    <color name="widget_muted">#52656E</color>
+    <color name="widget_accent">#176B87</color>
+    <color name="widget_good">#18784A</color>
+    <color name="widget_warn">#A15A00</color>
+    <color name="widget_bad">#9C2F2F</color>
+    <color name="transparent">#00000000</color>
+</resources>

@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Rockaway Board Window</string>
+    <string name="widget_name">Rockaway Board Window</string>
+    <string name="widget_description">Best Rockaway surf window for your selected board.</string>
+    <string name="widget_loading">Loading forecast…</string>
+</resources>
