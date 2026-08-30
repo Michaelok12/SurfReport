@@ -64,3 +64,11 @@ The native widget uses the same underlying forecast/scoring approach as the web 
 ## UI preview
 
 `widget-preview.html` is included at the repository root for quick design previews without rebuilding the APK. It is only a mockup; the actual Android layouts are under `app/src/main/res/layout/`.
+
+## v1.2 widget polish
+
+- Main face-height text auto-shrinks instead of clipping.
+- Board title avoids repeating the board length when it is already part of the profile name.
+- 5×3 Next Best cards use larger separate date/time lines.
+- Next Best cards are taller and use separate full-width swell and wind rows.
+- Next Best score pills are slightly smaller so timing/conditions remain visually dominant.

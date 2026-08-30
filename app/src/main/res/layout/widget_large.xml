@@ -66,12 +66,12 @@
             android:layout_marginStart="8dp"
             android:orientation="vertical"
             android:gravity="center">
-            <TextView android:id="@+id/faces" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:maxLines="1" android:ellipsize="end" android:text="3.0–4.2 FT" android:textSize="21sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+            <TextView android:id="@+id/faces" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:maxLines="1" android:text="3.0–4.2 FT" android:textSize="21sp" android:autoSizeTextType="uniform" android:autoSizeMinTextSize="14sp" android:autoSizeMaxTextSize="21sp" android:autoSizeStepGranularity="1sp" android:textStyle="bold" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/face_band" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:maxLines="1" android:ellipsize="end" android:text="CHEST–SHOULDER" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/widget_accent" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="168dp"
+            android:layout_width="160dp"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:orientation="vertical">
@@ -109,7 +109,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="5dp"
             android:text="NEXT BEST WINDOWS"
             android:textSize="8sp"
             android:textStyle="bold"
@@ -118,57 +118,72 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="112dp"
             android:orientation="horizontal">
 
-            <LinearLayout android:id="@+id/next1_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:background="@drawable/widget_metric_bg">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                    <TextView android:id="@+id/next1_when" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="1" android:ellipsize="end" android:text="Wed 9/3 · 6–9 AM" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_text" />
-                    <TextView android:id="@+id/next1_score" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="30dp" android:gravity="center" android:text="76" android:textSize="11sp" android:textStyle="bold" android:textColor="@color/widget_score_text" android:background="@drawable/widget_score_good" />
+            <LinearLayout android:id="@+id/next1_card" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:background="@drawable/widget_metric_bg">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="top">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:id="@+id/next1_date" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:text="Wed 9/3" android:textSize="13sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+                        <TextView android:id="@+id/next1_time" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:maxLines="1" android:ellipsize="end" android:text="6–9 AM" android:textSize="11sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
+                    </LinearLayout>
+                    <TextView android:id="@+id/next1_score" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="27dp" android:gravity="center" android:text="76" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/widget_score_text" android:background="@drawable/widget_score_good" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal" android:gravity="center_vertical">
+                    <TextView android:id="@+id/next1_faces" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3–4 FT" android:textSize="13sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+                    <TextView android:id="@+id/next1_band" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="5dp" android:maxLines="1" android:ellipsize="end" android:text="WAIST–CHEST+" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_accent" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal" android:gravity="center_vertical">
+                    <ImageView android:id="@+id/next1_swell_arrow" android:layout_width="15dp" android:layout_height="15dp" android:scaleType="fitCenter" android:src="@drawable/dir_w" android:contentDescription="Swell travel direction" />
+                    <TextView android:id="@+id/next1_swell" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="4dp" android:maxLines="1" android:ellipsize="end" android:text="E · 2.1' @ 9s" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
                 </LinearLayout>
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:orientation="horizontal" android:gravity="center_vertical">
-                    <TextView android:id="@+id/next1_faces" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3–4 FT" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/widget_text" />
-                    <TextView android:id="@+id/next1_band" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="5dp" android:maxLines="1" android:ellipsize="end" android:text="WAIST–CHEST+" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_accent" />
-                </LinearLayout>
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:orientation="horizontal" android:gravity="center_vertical">
-                    <ImageView android:id="@+id/next1_swell_arrow" android:layout_width="13dp" android:layout_height="13dp" android:scaleType="fitCenter" android:src="@drawable/dir_w" android:contentDescription="Swell travel direction" />
-                    <TextView android:id="@+id/next1_swell" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="2dp" android:maxLines="1" android:ellipsize="end" android:text="E 2.1' @ 9s" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
-                    <ImageView android:id="@+id/next1_wind_arrow" android:layout_width="13dp" android:layout_height="13dp" android:layout_marginStart="4dp" android:scaleType="fitCenter" android:src="@drawable/dir_s" android:contentDescription="Wind travel direction" />
-                    <TextView android:id="@+id/next1_wind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="2dp" android:maxLines="1" android:text="N 4" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
+                    <ImageView android:id="@+id/next1_wind_arrow" android:layout_width="15dp" android:layout_height="15dp" android:scaleType="fitCenter" android:src="@drawable/dir_s" android:contentDescription="Wind travel direction" />
+                    <TextView android:id="@+id/next1_wind" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="4dp" android:maxLines="1" android:ellipsize="end" android:text="N · 4 mph" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/next2_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="5dp" android:orientation="vertical" android:background="@drawable/widget_metric_bg">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                    <TextView android:id="@+id/next2_when" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="1" android:ellipsize="end" android:text="Fri 9/5 · 7–10 AM" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_text" />
-                    <TextView android:id="@+id/next2_score" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="30dp" android:gravity="center" android:text="68" android:textSize="11sp" android:textStyle="bold" android:textColor="@color/widget_score_text" android:background="@drawable/widget_score_warn" />
+            <LinearLayout android:id="@+id/next2_card" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginStart="5dp" android:orientation="vertical" android:background="@drawable/widget_metric_bg">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="top">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:id="@+id/next2_date" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:text="Fri 9/5" android:textSize="13sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+                        <TextView android:id="@+id/next2_time" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:maxLines="1" android:ellipsize="end" android:text="7–10 AM" android:textSize="11sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
+                    </LinearLayout>
+                    <TextView android:id="@+id/next2_score" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="27dp" android:gravity="center" android:text="68" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/widget_score_text" android:background="@drawable/widget_score_warn" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal" android:gravity="center_vertical">
+                    <TextView android:id="@+id/next2_faces" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2–3 FT" android:textSize="13sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+                    <TextView android:id="@+id/next2_band" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="5dp" android:maxLines="1" android:ellipsize="end" android:text="WAIST–CHEST" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_accent" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal" android:gravity="center_vertical">
+                    <ImageView android:id="@+id/next2_swell_arrow" android:layout_width="15dp" android:layout_height="15dp" android:scaleType="fitCenter" android:src="@drawable/dir_wnw" android:contentDescription="Swell travel direction" />
+                    <TextView android:id="@+id/next2_swell" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="4dp" android:maxLines="1" android:ellipsize="end" android:text="ESE · 1.9' @ 8s" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
                 </LinearLayout>
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:orientation="horizontal" android:gravity="center_vertical">
-                    <TextView android:id="@+id/next2_faces" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2–3 FT" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/widget_text" />
-                    <TextView android:id="@+id/next2_band" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="5dp" android:maxLines="1" android:ellipsize="end" android:text="WAIST–CHEST" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_accent" />
-                </LinearLayout>
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:orientation="horizontal" android:gravity="center_vertical">
-                    <ImageView android:id="@+id/next2_swell_arrow" android:layout_width="13dp" android:layout_height="13dp" android:scaleType="fitCenter" android:src="@drawable/dir_wnw" android:contentDescription="Swell travel direction" />
-                    <TextView android:id="@+id/next2_swell" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="2dp" android:maxLines="1" android:ellipsize="end" android:text="ESE 1.9' @ 8s" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
-                    <ImageView android:id="@+id/next2_wind_arrow" android:layout_width="13dp" android:layout_height="13dp" android:layout_marginStart="4dp" android:scaleType="fitCenter" android:src="@drawable/dir_ssw" android:contentDescription="Wind travel direction" />
-                    <TextView android:id="@+id/next2_wind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="2dp" android:maxLines="1" android:text="NNE 7" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
+                    <ImageView android:id="@+id/next2_wind_arrow" android:layout_width="15dp" android:layout_height="15dp" android:scaleType="fitCenter" android:src="@drawable/dir_ssw" android:contentDescription="Wind travel direction" />
+                    <TextView android:id="@+id/next2_wind" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="4dp" android:maxLines="1" android:ellipsize="end" android:text="NNE · 7 mph" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/next3_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="5dp" android:orientation="vertical" android:background="@drawable/widget_metric_bg">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                    <TextView android:id="@+id/next3_when" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="1" android:ellipsize="end" android:text="Sat 9/6 · 8–11 AM" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_text" />
-                    <TextView android:id="@+id/next3_score" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="30dp" android:gravity="center" android:text="42" android:textSize="11sp" android:textStyle="bold" android:textColor="@color/widget_score_text" android:background="@drawable/widget_score_bad" />
+            <LinearLayout android:id="@+id/next3_card" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginStart="5dp" android:orientation="vertical" android:background="@drawable/widget_metric_bg">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="top">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:id="@+id/next3_date" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:text="Sat 9/6" android:textSize="13sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+                        <TextView android:id="@+id/next3_time" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:maxLines="1" android:ellipsize="end" android:text="8–11 AM" android:textSize="11sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
+                    </LinearLayout>
+                    <TextView android:id="@+id/next3_score" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="27dp" android:gravity="center" android:text="42" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/widget_score_text" android:background="@drawable/widget_score_bad" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal" android:gravity="center_vertical">
+                    <TextView android:id="@+id/next3_faces" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5–7 FT" android:textSize="13sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+                    <TextView android:id="@+id/next3_band" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="5dp" android:maxLines="1" android:ellipsize="end" android:text="HEAD–OVERHEAD" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_accent" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal" android:gravity="center_vertical">
+                    <ImageView android:id="@+id/next3_swell_arrow" android:layout_width="15dp" android:layout_height="15dp" android:scaleType="fitCenter" android:src="@drawable/dir_wnw" android:contentDescription="Swell travel direction" />
+                    <TextView android:id="@+id/next3_swell" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="4dp" android:maxLines="1" android:ellipsize="end" android:text="ESE · 3.3' @ 13s" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
                 </LinearLayout>
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:orientation="horizontal" android:gravity="center_vertical">
-                    <TextView android:id="@+id/next3_faces" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5–7 FT" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/widget_text" />
-                    <TextView android:id="@+id/next3_band" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="5dp" android:maxLines="1" android:ellipsize="end" android:text="HEAD–OVERHEAD" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_accent" />
-                </LinearLayout>
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:orientation="horizontal" android:gravity="center_vertical">
-                    <ImageView android:id="@+id/next3_swell_arrow" android:layout_width="13dp" android:layout_height="13dp" android:scaleType="fitCenter" android:src="@drawable/dir_wnw" android:contentDescription="Swell travel direction" />
-                    <TextView android:id="@+id/next3_swell" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="2dp" android:maxLines="1" android:ellipsize="end" android:text="ESE 3.3' @ 13s" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
-                    <ImageView android:id="@+id/next3_wind_arrow" android:layout_width="13dp" android:layout_height="13dp" android:layout_marginStart="4dp" android:scaleType="fitCenter" android:src="@drawable/dir_se" android:contentDescription="Wind travel direction" />
-                    <TextView android:id="@+id/next3_wind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="2dp" android:maxLines="1" android:text="NW 12" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
+                    <ImageView android:id="@+id/next3_wind_arrow" android:layout_width="15dp" android:layout_height="15dp" android:scaleType="fitCenter" android:src="@drawable/dir_se" android:contentDescription="Wind travel direction" />
+                    <TextView android:id="@+id/next3_wind" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="4dp" android:maxLines="1" android:ellipsize="end" android:text="NW · 12 mph" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

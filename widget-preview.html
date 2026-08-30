@@ -184,19 +184,19 @@
   .large-next-group{margin-top:auto}
   .large-next-label{font-size:8px;font-weight:900;letter-spacing:.11em;color:var(--muted);margin:0 0 4px}
   .next-slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;min-height:0}
-  .next-slot{background:var(--surface);border-radius:12px;padding:6px 8px;min-width:0;display:flex;flex-direction:column;gap:3px}
-  .slot-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
-  .slot-when{min-width:0;display:flex;align-items:center;gap:5px;flex-wrap:nowrap}
-  .slot-date{font-size:10px;font-weight:900;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .slot-time{font-size:9px;font-weight:800;color:var(--muted);line-height:1.1;margin-top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .slot-score{min-width:30px;border-radius:99px;padding:3px 7px;text-align:center;font-size:11px;font-weight:900;line-height:1;color:var(--score-text);background:var(--good);flex:none}
+  .next-slot{background:var(--surface);border-radius:12px;padding:7px 8px;min-width:0;min-height:104px;display:flex;flex-direction:column;gap:3px}
+  .slot-head{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;min-width:0}
+  .slot-when{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:1px;flex-wrap:nowrap}
+  .slot-date{font-size:13px;font-weight:900;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .slot-time{font-size:11px;font-weight:800;color:var(--muted);line-height:1.1;margin-top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .slot-score{min-width:27px;border-radius:99px;padding:3px 6px;text-align:center;font-size:10px;font-weight:900;line-height:1;color:var(--score-text);background:var(--good);flex:none}
   .slot-score.warn{background:var(--warn)}
   .slot-score.bad{background:var(--bad)}
-  .slot-faces{font-size:12px;font-weight:900;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .slot-band{font-size:8px;font-weight:900;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .slot-faces{font-size:13px;font-weight:900;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .slot-band{font-size:9px;font-weight:900;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .slot-face-line{display:flex;align-items:baseline;gap:6px;min-width:0;white-space:nowrap}
-  .slot-mini{display:flex;align-items:center;gap:8px;min-width:0;margin-top:auto}
-  .slot-mini-item{display:flex;align-items:center;gap:4px;min-width:0;color:var(--muted);font-size:8px;font-weight:800;white-space:nowrap}
+  .slot-mini{display:flex;flex-direction:column;align-items:stretch;gap:2px;min-width:0;margin-top:2px}
+  .slot-mini-item{display:flex;align-items:center;gap:4px;min-width:0;width:100%;color:var(--muted);font-size:9px;font-weight:800;white-space:nowrap}
   .slot-dir-arrow{position:relative;width:12px;height:12px;flex:none;display:inline-block}
   .slot-dir-arrow::before{content:'';position:absolute;left:50%;top:50%;width:1.5px;height:8px;background:var(--accent);transform:translate(-50%,-50%) rotate(var(--slot-dir-rot,0deg));transform-origin:50% 50%;border-radius:2px}
   .slot-dir-arrow::after{content:'';position:absolute;left:50%;top:1px;width:4px;height:4px;border-top:1.5px solid var(--accent);border-right:1.5px solid var(--accent);transform:translateX(-50%) rotate(calc(var(--slot-dir-rot,0deg) - 45deg));transform-origin:center}
@@ -434,17 +434,17 @@
               <div class="next-slot">
                 <div class="slot-head"><div class="slot-when"><div class="slot-date">Wed 9/3</div><div class="slot-time">6–9 AM</div></div><div class="slot-score">76</div></div>
                 <div class="slot-face-line"><div class="slot-faces">3–4 FT</div><div class="slot-band">WAIST–CHEST+</div></div>
-                <div class="slot-mini"><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-swell js-slot-swell-arrow" data-dir="E"></span><span>E 2.1' @ 9s</span></div><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-wind js-slot-wind-arrow" data-dir="N"></span><span>N 4</span></div></div>
+                <div class="slot-mini"><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-swell js-slot-swell-arrow" data-dir="E"></span><span>E · 2.1' @ 9s</span></div><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-wind js-slot-wind-arrow" data-dir="N"></span><span>N · 4 mph</span></div></div>
               </div>
               <div class="next-slot">
                 <div class="slot-head"><div class="slot-when"><div class="slot-date">Fri 9/5</div><div class="slot-time">7–10 AM</div></div><div class="slot-score warn">68</div></div>
                 <div class="slot-face-line"><div class="slot-faces">2–3 FT</div><div class="slot-band">WAIST–CHEST</div></div>
-                <div class="slot-mini"><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-swell js-slot-swell-arrow" data-dir="ESE"></span><span>ESE 1.9' @ 8s</span></div><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-wind js-slot-wind-arrow" data-dir="NNE"></span><span>NNE 7</span></div></div>
+                <div class="slot-mini"><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-swell js-slot-swell-arrow" data-dir="ESE"></span><span>ESE · 1.9' @ 8s</span></div><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-wind js-slot-wind-arrow" data-dir="NNE"></span><span>NNE · 7 mph</span></div></div>
               </div>
               <div class="next-slot">
                 <div class="slot-head"><div class="slot-when"><div class="slot-date">Sat 9/6</div><div class="slot-time">8–11 AM</div></div><div class="slot-score bad">42</div></div>
                 <div class="slot-face-line"><div class="slot-faces">5–7 FT</div><div class="slot-band">HEAD–OVERHEAD</div></div>
-                <div class="slot-mini"><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-swell js-slot-swell-arrow" data-dir="ESE"></span><span>ESE 3.3' @ 13s</span></div><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-wind js-slot-wind-arrow" data-dir="NW"></span><span>NW 12</span></div></div>
+                <div class="slot-mini"><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-swell js-slot-swell-arrow" data-dir="ESE"></span><span>ESE · 3.3' @ 13s</span></div><div class="slot-mini-item"><span class="slot-dir-arrow slot-dir-arrow-wind js-slot-wind-arrow" data-dir="NW"></span><span>NW · 12 mph</span></div></div>
               </div>
             </div>
             </div>

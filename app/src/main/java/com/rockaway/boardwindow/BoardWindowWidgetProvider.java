@@ -130,7 +130,7 @@ public class BoardWindowWidgetProvider extends AppWidgetProvider {
 
         if (snapshot == null) {
             v.setTextViewText(R.id.board_name, rich
-                    ? board.name + " · " + board.length + " · " + trimVolume(board.volume) + " L"
+                    ? formatBoardTitle(board.name, board.length, board.volume)
                     : board.name);
             v.setTextViewText(R.id.day_date, "—");
             v.setTextViewText(R.id.time_window, "NO FORECAST");
@@ -149,7 +149,7 @@ public class BoardWindowWidgetProvider extends AppWidgetProvider {
         }
 
         v.setTextViewText(R.id.board_name, rich
-                ? snapshot.boardName + " · " + snapshot.boardLength + " · " + trimVolume(snapshot.boardVolume) + " L"
+                ? formatBoardTitle(snapshot.boardName, snapshot.boardLength, snapshot.boardVolume)
                 : snapshot.boardName);
         v.setTextViewText(R.id.day_date, dayDate(snapshot.windowStart));
         v.setTextViewText(R.id.time_window, timeRange(snapshot.windowStart, snapshot.windowEnd));
@@ -190,7 +190,8 @@ public class BoardWindowWidgetProvider extends AppWidgetProvider {
 
     private static void bindNextCards(Context context, RemoteViews v, List<ForecastRepository.WindowSummary> windows) {
         int[] cards = {R.id.next1_card, R.id.next2_card, R.id.next3_card};
-        int[] whens = {R.id.next1_when, R.id.next2_when, R.id.next3_when};
+        int[] dates = {R.id.next1_date, R.id.next2_date, R.id.next3_date};
+        int[] times = {R.id.next1_time, R.id.next2_time, R.id.next3_time};
         int[] scores = {R.id.next1_score, R.id.next2_score, R.id.next3_score};
         int[] faces = {R.id.next1_faces, R.id.next2_faces, R.id.next3_faces};
         int[] bands = {R.id.next1_band, R.id.next2_band, R.id.next3_band};
@@ -206,21 +207,22 @@ public class BoardWindowWidgetProvider extends AppWidgetProvider {
             }
             ForecastRepository.WindowSummary w = windows.get(i);
             v.setViewVisibility(cards[i], View.VISIBLE);
-            v.setTextViewText(whens[i], dayDate(w.windowStart) + " · " + timeRange(w.windowStart, w.windowEnd));
+            v.setTextViewText(dates[i], dayDate(w.windowStart));
+            v.setTextViewText(times[i], timeRange(w.windowStart, w.windowEnd));
             v.setTextViewText(scores[i], String.valueOf(w.score));
-            applyScoreStyle(context, v, scores[i], w.score);
+            applySmallScoreStyle(context, v, scores[i], w.score);
             String[] fp = splitFaces(w.facesText);
             v.setTextViewText(faces[i], roundedFaces(w.facesText));
             v.setTextViewText(bands[i], fp[1]);
 
             SwellParts swell = parseSwell(w.swellText);
             v.setImageViewResource(swellArrows[i], directionDrawable(context, "dir", swell.direction, true));
-            String swellShort = swell.direction.equals("—") ? "—" : swell.direction + " " + swell.heightText + " @ " + swell.periodText;
+            String swellShort = swell.direction.equals("—") ? "—" : swell.direction + " · " + swell.heightText + " @ " + swell.periodText;
             v.setTextViewText(swellTexts[i], swellShort);
 
             WindParts wind = parseWind(w.windText);
             v.setImageViewResource(windArrows[i], directionDrawable(context, "dir", wind.direction, true));
-            String windShort = wind.direction.equals("—") ? "—" : wind.direction + " " + wind.speedText;
+            String windShort = wind.direction.equals("—") ? "—" : wind.direction + " · " + wind.speedText + " mph";
             v.setTextViewText(windTexts[i], windShort);
         }
     }
@@ -229,6 +231,16 @@ public class BoardWindowWidgetProvider extends AppWidgetProvider {
         v.setViewVisibility(R.id.next1_card, View.INVISIBLE);
         v.setViewVisibility(R.id.next2_card, View.INVISIBLE);
         v.setViewVisibility(R.id.next3_card, View.INVISIBLE);
+    }
+
+    private static void applySmallScoreStyle(Context context, RemoteViews v, int viewId, int score) {
+        int background;
+        if (score >= 75) background = R.drawable.widget_score_small_good;
+        else if (score >= 60) background = R.drawable.widget_score_small_warn;
+        else if (score < 45) background = R.drawable.widget_score_small_bad;
+        else background = R.drawable.widget_score_small_neutral;
+        v.setInt(viewId, "setBackgroundResource", background);
+        v.setTextColor(viewId, context.getColor(R.color.widget_score_text));
     }
 
     private static int scoreColor(Context context, int score) {
@@ -393,6 +405,15 @@ public class BoardWindowWidgetProvider extends AppWidgetProvider {
     private static double parseDouble(String s) {
         try { return Double.parseDouble(s); }
         catch (Exception e) { return Double.NaN; }
+    }
+
+    private static String formatBoardTitle(String name, String length, double volume) {
+        String safeName = name == null || name.trim().isEmpty() ? "Board" : name.trim();
+        String safeLength = length == null ? "" : length.trim();
+        boolean nameHasLength = !safeLength.isEmpty() && safeName.toLowerCase(Locale.US).contains(safeLength.toLowerCase(Locale.US));
+        if (nameHasLength) return safeName + " · " + trimVolume(volume) + " L";
+        if (!safeLength.isEmpty()) return safeName + " · " + safeLength + " · " + trimVolume(volume) + " L";
+        return safeName + " · " + trimVolume(volume) + " L";
     }
 
     private static String trimVolume(double value) {

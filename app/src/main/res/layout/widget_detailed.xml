@@ -129,9 +129,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxLines="1"
-                android:ellipsize="end"
+                
                 android:text="3.0–4.2 FT"
-                android:textSize="21sp"
+                android:textSize="21sp" android:autoSizeTextType="uniform" android:autoSizeMinTextSize="14sp" android:autoSizeMaxTextSize="21sp" android:autoSizeStepGranularity="1sp"
                 android:textStyle="bold"
                 android:textColor="@color/widget_text" />
 
