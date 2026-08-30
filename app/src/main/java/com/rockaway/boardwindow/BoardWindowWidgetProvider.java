@@ -117,9 +117,12 @@ public class BoardWindowWidgetProvider extends AppWidgetProvider {
                     ? board.name + " · " + board.length + " · " + trimVolume(board.volume) + " L"
                     : board.name);
             v.setTextViewText(R.id.score, "—");
+            v.setInt(R.id.score, "setBackgroundResource", R.drawable.widget_score_neutral);
             v.setTextViewText(R.id.rating, refreshing ? "REFRESHING…" : "TAP TO LOAD");
-            v.setTextViewText(R.id.window, "Forecast not cached yet");
-            v.setTextViewText(R.id.faces, "Faces —");
+            v.setTextColor(R.id.rating, context.getColor(R.color.widget_accent));
+            v.setTextViewText(R.id.window, "Forecast not cached");
+            v.setTextViewText(R.id.faces, "— FT");
+            v.setTextViewText(R.id.face_band, refreshing ? "UPDATING CONDITIONS" : "OPEN APP TO LOAD");
             if (layoutId == R.layout.widget_detailed) {
                 v.setTextViewText(R.id.swell, "—");
                 v.setTextViewText(R.id.wind, "—");
@@ -133,10 +136,13 @@ public class BoardWindowWidgetProvider extends AppWidgetProvider {
                 ? snapshot.boardName + " · " + snapshot.boardLength + " · " + trimVolume(snapshot.boardVolume) + " L"
                 : snapshot.boardName);
         v.setTextViewText(R.id.score, String.valueOf(snapshot.score));
-        v.setTextColor(R.id.score, scoreColor(context, snapshot.score));
+        applyScoreStyle(context, v, snapshot.score);
         v.setTextViewText(R.id.rating, snapshot.rating);
-        v.setTextViewText(R.id.window, snapshot.windowText);
-        v.setTextViewText(R.id.faces, snapshot.facesText);
+        v.setTextColor(R.id.rating, scoreColor(context, snapshot.score));
+        v.setTextViewText(R.id.window, compactWindow(snapshot));
+        String[] faceParts = splitFaces(snapshot.facesText);
+        v.setTextViewText(R.id.faces, faceParts[0]);
+        v.setTextViewText(R.id.face_band, faceParts[1]);
 
         if (layoutId == R.layout.widget_detailed) {
             v.setTextViewText(R.id.swell, snapshot.swellText);
@@ -153,6 +159,40 @@ public class BoardWindowWidgetProvider extends AppWidgetProvider {
         if (score >= 60) return context.getColor(R.color.widget_warn);
         if (score < 45) return context.getColor(R.color.widget_bad);
         return context.getColor(R.color.widget_accent);
+    }
+
+    private static void applyScoreStyle(Context context, RemoteViews v, int score) {
+        int background;
+        if (score >= 75) background = R.drawable.widget_score_good;
+        else if (score >= 60) background = R.drawable.widget_score_warn;
+        else if (score < 45) background = R.drawable.widget_score_bad;
+        else background = R.drawable.widget_score_neutral;
+        v.setInt(R.id.score, "setBackgroundResource", background);
+        v.setTextColor(R.id.score, context.getColor(R.color.widget_score_text));
+    }
+
+    private static String[] splitFaces(String raw) {
+        if (raw == null || raw.trim().isEmpty() || "—".equals(raw.trim())) {
+            return new String[]{"— FT", "BREAKING HEIGHT UNKNOWN"};
+        }
+        String[] parts = raw.split("\\s*·\\s*", 2);
+        String height = parts[0].trim().replace(" ft", " FT").replace("ft", "FT");
+        String band = parts.length > 1 ? parts[1].trim().toUpperCase(Locale.US) : "ESTIMATED BREAKING FACES";
+        return new String[]{height, band};
+    }
+
+    private static String compactWindow(ForecastRepository.ForecastSnapshot s) {
+        if (s.windowStart <= 0 || s.windowEnd <= 0) return s.windowText;
+        ZoneId zone = ZoneId.of("America/New_York");
+        java.time.ZonedDateTime start = Instant.ofEpochMilli(s.windowStart).atZone(zone);
+        java.time.ZonedDateTime end = Instant.ofEpochMilli(s.windowEnd).atZone(zone);
+        DateTimeFormatter day = DateTimeFormatter.ofPattern("EEE", Locale.US);
+        DateTimeFormatter hour = DateTimeFormatter.ofPattern("h", Locale.US);
+        DateTimeFormatter hourMeridiem = DateTimeFormatter.ofPattern("h a", Locale.US);
+        String startTime = start.get(java.time.temporal.ChronoField.AMPM_OF_DAY) == end.get(java.time.temporal.ChronoField.AMPM_OF_DAY)
+                ? start.format(hour)
+                : start.format(hourMeridiem);
+        return start.format(day) + " · " + startTime + "–" + end.format(hourMeridiem);
     }
 
     private static String trimVolume(double v) {
