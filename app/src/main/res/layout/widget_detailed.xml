@@ -18,7 +18,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="ROCKAWAY · BEST BOARD WINDOW"
                 android:textSize="8sp"
@@ -42,7 +42,7 @@
             android:id="@+id/refresh_button"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="5dp"
             android:background="@android:color/transparent"
             android:contentDescription="Refresh forecast"
             android:src="@drawable/ic_refresh" />
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -60,33 +60,52 @@
             android:layout_width="82dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:background="@drawable/widget_metric_bg">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/day_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="Tue 9/2"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_text" />
 
-                <TextView
-                    android:id="@+id/score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="44dp"
-                    android:gravity="center"
-                    android:text="82"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/widget_score_text"
-                    android:background="@drawable/widget_score_good" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/time_window"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="6dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="7–10 AM"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_muted" />
+
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="44dp"
+                android:gravity="center"
+                android:text="82"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_score_text"
+                android:background="@drawable/widget_score_good" />
 
             <TextView
                 android:id="@+id/rating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -94,18 +113,6 @@
                 android:textSize="9sp"
                 android:textStyle="bold"
                 android:textColor="@color/widget_good" />
-
-            <TextView
-                android:id="@+id/window"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:gravity="center"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:text="Tue · 7–10 AM"
-                android:textSize="9sp"
-                android:textColor="@color/widget_muted" />
         </LinearLayout>
 
         <LinearLayout
@@ -114,20 +121,13 @@
             android:layout_weight="1"
             android:layout_marginStart="8dp"
             android:orientation="vertical"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BREAKING FACES"
-                android:textSize="8sp"
-                android:textStyle="bold"
-                android:textColor="@color/widget_muted" />
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/faces"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:text="3.0–4.2 FT"
@@ -139,6 +139,7 @@
                 android:id="@+id/face_band"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:text="CHEST–SHOULDER"
@@ -146,44 +147,80 @@
                 android:textStyle="bold"
                 android:textColor="@color/widget_accent" />
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:background="@drawable/widget_metric_bg">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SWELL" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
-            <TextView android:id="@+id/swell" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:text="2.4' @ 10s ESE" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/widget_text" />
-        </LinearLayout>
+            android:layout_width="168dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="5dp"
-            android:orientation="vertical"
-            android:background="@drawable/widget_metric_bg">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="WIND" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
-            <TextView android:id="@+id/wind" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:text="NW 5 mph" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/widget_text" />
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/widget_metric_bg">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="5dp"
-            android:orientation="vertical"
-            android:background="@drawable/widget_metric_bg">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TIDE" android:textSize="8sp" android:textStyle="bold" android:textColor="@color/widget_muted" />
-            <TextView android:id="@+id/tide" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:text="Mid ↑ 2.3 ft" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+                <ImageView
+                    android:id="@+id/swell_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="6dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/swell_2_wnw"
+                    android:contentDescription="Swell direction" />
+
+                <TextView android:id="@+id/swell_height" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2.4'" android:textSize="15sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+                <TextView android:id="@+id/swell_period" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="5dp" android:text="10s" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/widget_accent" />
+                <TextView android:id="@+id/swell_dir" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:background="@drawable/widget_chip_bg" android:text="ESE" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/widget_metric_bg">
+
+                <ImageView
+                    android:id="@+id/wind_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="6dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/wind_se"
+                    android:contentDescription="Wind direction" />
+
+                <TextView android:id="@+id/wind_speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5" android:textSize="15sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="3dp" android:text="mph" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/widget_accent" />
+                <TextView android:id="@+id/wind_dir" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:background="@drawable/widget_chip_bg" android:text="NW" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/widget_metric_bg">
+
+                <ImageView
+                    android:id="@+id/tide_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="6dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/tide_2_up"
+                    android:contentDescription="Tide stage" />
+
+                <TextView android:id="@+id/tide_height" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2.3" android:textSize="15sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="3dp" android:text="ft" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/widget_accent" />
+                <TextView android:id="@+id/tide_phase" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:background="@drawable/widget_chip_bg" android:text="MID ↑" android:textSize="9sp" android:textStyle="bold" android:textColor="@color/widget_text" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -192,9 +229,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:gravity="end"
         android:maxLines="1"
         android:ellipsize="end"
-        android:gravity="end"
         android:text="Updated 1:22 PM · 6m ago"
         android:textSize="8sp"
         android:textColor="@color/widget_muted" />

@@ -3,104 +3,134 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_vertical"
     android:background="@drawable/widget_bg">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ROCKAWAY"
+        android:textSize="8sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.10"
+        android:textColor="@color/widget_muted" />
+
+    <TextView
+        android:id="@+id/board_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="6'6 Progression"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:textColor="@color/widget_text" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center"
+        android:background="@drawable/widget_metric_bg">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ROCKAWAY"
-                android:textSize="8sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.12"
-                android:textColor="@color/widget_muted" />
-
-            <TextView
-                android:id="@+id/board_name"
+                android:id="@+id/day_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textSize="11sp"
+                android:text="Tue 9/2"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="@color/widget_text"
-                android:text="6'6 Progression" />
+                android:textColor="@color/widget_text" />
+
+            <TextView
+                android:id="@+id/time_window"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="7–10 AM"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_muted" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="42dp"
-            android:gravity="center"
-            android:text="82"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/widget_score_text"
-            android:background="@drawable/widget_score_good" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/faces"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:text="3.0–4.2 FT"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/widget_text" />
-
-    <TextView
-        android:id="@+id/face_band"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:text="CHEST–SHOULDER"
-        android:textSize="9sp"
-        android:textStyle="bold"
-        android:textColor="@color/widget_accent" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GOOD"
-            android:textSize="9sp"
-            android:textStyle="bold"
-            android:textColor="@color/widget_good" />
-
-        <TextView
-            android:id="@+id/window"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="6dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="42dp"
+                android:gravity="center"
+                android:text="82"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_score_text"
+                android:background="@drawable/widget_score_good" />
+
+            <TextView
+                android:id="@+id/rating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="GOOD"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_good" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="6dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/faces"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="Tue · 7–10 AM"
+            android:text="3.0–4.2 FT"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:textColor="@color/widget_text" />
+
+        <TextView
+            android:id="@+id/face_band"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="CHEST–SHOULDER"
             android:textSize="9sp"
-            android:textColor="@color/widget_muted" />
+            android:textStyle="bold"
+            android:textColor="@color/widget_accent" />
     </LinearLayout>
 </LinearLayout>
