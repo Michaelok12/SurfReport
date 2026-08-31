@@ -237,8 +237,7 @@ public class BoardWindowWidgetProvider extends AppWidgetProvider {
         int background;
         if (score >= 75) background = R.drawable.widget_score_small_good;
         else if (score >= 60) background = R.drawable.widget_score_small_warn;
-        else if (score < 45) background = R.drawable.widget_score_small_bad;
-        else background = R.drawable.widget_score_small_neutral;
+        else background = R.drawable.widget_score_small_bad;
         v.setInt(viewId, "setBackgroundResource", background);
         v.setTextColor(viewId, context.getColor(R.color.widget_score_text));
     }
@@ -246,16 +245,14 @@ public class BoardWindowWidgetProvider extends AppWidgetProvider {
     private static int scoreColor(Context context, int score) {
         if (score >= 75) return context.getColor(R.color.widget_good);
         if (score >= 60) return context.getColor(R.color.widget_warn);
-        if (score < 45) return context.getColor(R.color.widget_bad);
-        return context.getColor(R.color.widget_accent);
+        return context.getColor(R.color.widget_bad);
     }
 
     private static void applyScoreStyle(Context context, RemoteViews v, int viewId, int score) {
         int background;
         if (score >= 75) background = R.drawable.widget_score_good;
         else if (score >= 60) background = R.drawable.widget_score_warn;
-        else if (score < 45) background = R.drawable.widget_score_bad;
-        else background = R.drawable.widget_score_neutral;
+        else background = R.drawable.widget_score_bad;
         v.setInt(viewId, "setBackgroundResource", background);
         v.setTextColor(viewId, context.getColor(R.color.widget_score_text));
     }
